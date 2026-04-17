@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우리의 신혼집 찾기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F9F6F0;
+    --charcoal: #1C1C1E;
+    --warm-gray: #6B6560;
+    --accent: #C8733A;
+    --accent-light: #F0DDD0;
+    --border: #E2DDD8;
+    --green: #4A7C59;
+    --green-light: #D6EAD9;
+    --red-light: #FAE8E8;
+    --red: #C0392B;
+    --gold: #B8963E;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--charcoal);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 20% 30%, rgba(200,115,58,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 60% at 80% 70%, rgba(74,124,89,0.06) 0%, transparent 60%);
+  }
+
+  .hero-eyebrow {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .hero-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(36px, 8vw, 72px);
+    font-weight: 300;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .hero-title em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--warm-gray);
+    max-width: 400px;
+    margin: 0 auto 40px;
+    position: relative;
+  }
+
+  .progress-bar-wrap {
+    width: min(400px, 100%);
+    background: var(--border);
+    border-radius: 100px;
+    height: 6px;
+    margin: 0 auto 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--gold));
+    border-radius: 100px;
+    width: 60%;
+    animation: fillBar 1.8s ease forwards;
+  }
+
+  @keyframes fillBar {
+    from { width: 0 }
+    to { width: 60% }
+  }
+
+  .progress-label {
+    font-size: 12px;
+    color: var(--warm-gray);
+    letter-spacing: 1px;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: var(--warm-gray);
+    letter-spacing: 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .scroll-hint::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 32px;
+    background: var(--accent);
+    animation: scrollLine 1.5s ease-in-out infinite;
+  }
+
+  @keyframes scrollLine {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.3); }
+  }
+
+  /* ── SECTION BASE ── */
+  section {
+    padding: 80px 24px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 48px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-num {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    white-space: nowrap;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 400;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    position: relative;
+    padding-left: 0;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 16px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .timeline-item {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 36px;
+    align-items: flex-start;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .timeline-item:nth-child(1) { animation-delay: 0.1s }
+  .timeline-item:nth-child(2) { animation-delay: 0.2s }
+  .timeline-item:nth-child(3) { animation-delay: 0.3s }
+  .timeline-item:nth-child(4) { animation-delay: 0.4s }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .timeline-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .dot-done { background: var(--green); color: white; }
+  .dot-active { background: var(--accent); color: white; box-shadow: 0 0 0 4px var(--accent-light); }
+  .dot-pending { background: var(--border); color: var(--warm-gray); }
+
+  .timeline-content { flex: 1; padding-top: 4px; }
+
+  .timeline-date {
+    font-size: 11px;
+    color: var(--warm-gray);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .timeline-step-title {
+    font-weight: 500;
+    margin-bottom: 4px;
+    font-size: 15px;
+  }
+
+  .timeline-desc {
+    font-size: 13px;
+    color: var(--warm-gray);
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    letter-spacing: 1px;
+    margin-left: 8px;
+    font-weight: 500;
+  }
+
+  .badge-done { background: var(--green-light); color: var(--green); }
+  .badge-active { background: var(--accent-light); color: var(--accent); }
+  .badge-pending { background: var(--border); color: var(--warm-gray); }
+
+  /* ── MAP ── */
+  .map-container {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+    position: relative;
+    height: 420px;
+  }
+
+  #naver-map {
+    width: 100%;
+    height: 100%;
+  }
+
+  .map-api-notice {
+    background: var(--accent-light);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--accent);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .map-api-notice code {
+    background: rgba(200,115,58,0.15);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: monospace;
+  }
+
+  .map-legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+    padding: 12px 16px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 12px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--warm-gray);
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── COMPARISON TABLE ── */
+  .compare-grid {
+    display: grid;
+    gap: 20px;
+  }
+
+  .compare-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+    transition: box-shadow 0.2s;
+  }
+
+  .compare-card:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  }
+
+  .compare-card.winner {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+
+  .card-header {
+    padding: 20px 24px 16px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--charcoal);
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 12px;
+    margin-top: 2px;
+  }
+
+  .card-num.accent-num { background: var(--accent); }
+
+  .card-name {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .card-location {
+    font-size: 12px;
+    color: var(--warm-gray);
+  }
+
+  .card-price {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .card-price-main {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .card-price-sub {
+    font-size: 11px;
+    color: var(--warm-gray);
+  }
+
+  .card-body {
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 24px;
+  }
+
+  .card-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card-row:last-child { border-bottom: none; }
+
+  .card-row-label { color: var(--warm-gray); }
+  .card-row-value { font-weight: 500; }
+
+  .card-tags {
+    padding: 0 24px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    color: var(--warm-gray);
+  }
+
+  .tag.pro { background: var(--green-light); border-color: var(--green-light); color: var(--green); }
+  .tag.con { background: var(--red-light); border-color: var(--red-light); color: var(--red); }
+
+  .winner-ribbon {
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    padding: 4px 12px;
+    letter-spacing: 1px;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  /* ── STAR RATING ── */
+  .rating-section {
+    padding: 0 24px 20px;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+
+  .rating-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .rating-row:last-child { margin-bottom: 0; }
+
+  .rating-label {
+    font-size: 12px;
+    color: var(--warm-gray);
+    width: 56px;
+    flex-shrink: 0;
+  }
+
+  .rating-label.avg-label {
+    font-weight: 600;
+    color: var(--charcoal);
+  }
+
+  .stars {
+    display: flex;
+    gap: 3px;
+    position: relative;
+  }
+
+  .star-wrap {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+  }
+
+  .star-wrap svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 22px; height: 22px;
+    pointer-events: none;
+  }
+
+  /* half-click zone: left = half, right = full */
+  .star-half-zone {
+    position: absolute;
+    top: 0; left: 0;
+    width: 50%; height: 100%;
+    z-index: 2;
+  }
+
+  .star-full-zone {
+    position: absolute;
+    top: 0; right: 0;
+    width: 50%; height: 100%;
+    z-index: 2;
+  }
+
+  .rating-score {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    width: 28px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .rating-score.avg-score {
+    color: var(--gold);
+    font-size: 15px;
+  }
+
+  .avg-divider {
+    border: none;
+    border-top: 1px dashed var(--border);
+    margin: 10px 0;
+  }
+
+  .avg-stars .star-wrap { cursor: default; }
+  .avg-stars .star-half-zone,
+  .avg-stars .star-full-zone { pointer-events: none; }
+
+  /* ── CHECKLIST ── */
+  .checklist-group { margin-bottom: 36px; }
+
+  .checklist-group-title {
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+
+  .checklist-items { display: flex; flex-direction: column; gap: 2px; }
+
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    transition: background 0.15s;
+    cursor: pointer;
+  }
+
+  .check-item:hover { background: rgba(0,0,0,0.02); }
+
+  .check-box {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    transition: all 0.2s;
+  }
+
+  .check-box.checked {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+  }
+
+  .check-box.partial {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .check-text {
+    font-size: 14px;
+    flex: 1;
+  }
+
+  .check-text.done {
+    text-decoration: line-through;
+    color: var(--warm-gray);
+  }
+
+  .check-note {
+    font-size: 11px;
+    color: var(--warm-gray);
+    background: var(--border);
+    padding: 2px 8px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  /* Progress donut */
+  .progress-summary {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .progress-card {
+    flex: 1;
+    min-width: 120px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .progress-circle {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 10px;
+    position: relative;
+  }
+
+  .progress-circle svg { transform: rotate(-90deg); }
+
+  .progress-circle-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .progress-card-label {
+    font-size: 12px;
+    color: var(--warm-gray);
+  }
+
+  /* ── REVEAL ── */
+  .reveal-section {
+    text-align: center;
+    padding: 80px 24px 100px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .reveal-eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+
+  .reveal-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(28px, 6vw, 48px);
+    font-weight: 300;
+    line-height: 1.3;
+    margin-bottom: 32px;
+  }
+
+  .reveal-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 32px;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .reveal-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--gold));
+  }
+
+  .reveal-apt-name {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .reveal-apt-sub {
+    font-size: 14px;
+    color: var(--warm-gray);
+    margin-bottom: 28px;
+  }
+
+  .reveal-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .reveal-stat {
+    text-align: center;
+    padding: 16px;
+    background: var(--cream);
+    border-radius: 10px;
+  }
+
+  .reveal-stat-value {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .reveal-stat-label {
+    font-size: 11px;
+    color: var(--warm-gray);
+    letter-spacing: 0.5px;
+  }
+
+  .reveal-message {
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--warm-gray);
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    font-style: italic;
+  }
+
+  .reveal-pending {
+    background: var(--cream);
+    border: 2px dashed var(--border);
+    border-radius: 16px;
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--warm-gray);
+    font-size: 14px;
+  }
+
+  .reveal-pending-icon { font-size: 36px; margin-bottom: 12px; }
+
+  /* ── NAV ── */
+  .sticky-nav {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(28, 28, 30, 0.92);
+    backdrop-filter: blur(12px);
+    border-radius: 100px;
+    padding: 10px 20px;
+    display: flex;
+    gap: 4px;
+    z-index: 100;
+  }
+
+  .nav-btn {
+    color: rgba(255,255,255,0.6);
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-btn:hover { color: white; }
+  .nav-btn.active { background: var(--accent); color: white; }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    max-width: 900px;
+    margin: 0 auto;
+    border: none;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 600px) {
+    .card-body { grid-template-columns: 1fr; }
+    .reveal-stats { grid-template-columns: repeat(2, 1fr); }
+    .progress-summary { flex-direction: column; }
+    .sticky-nav { width: calc(100% - 32px); justify-content: center; }
+    .nav-btn { padding: 8px 12px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero" id="top">
+  <div class="hero-eyebrow">2025–2026 · 우리의 이야기</div>
+  <h1 class="hero-title">우리 <em>신혼집</em><br>찾기 프로젝트</h1>
+  <p class="hero-sub">함께 고르고, 함께 결정한 과정을 가족들과 나눠요</p>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill"></div>
+  </div>
+  <div class="progress-label">전체 진행률 60%</div>
+  <div class="scroll-hint">SCROLL</div>
+</div>
+
+<!-- SECTION 1: TIMELINE -->
+<section id="journey">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">진행 여정</h2>
+  </div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot dot-done">✓</div>
+      <div class="timeline-content">
+        <div class="timeline-date">2025년 10월</div>
+        <div class="timeline-step-title">예산 & 지역 결정 <span class="badge badge-done">완료</span></div>
+        <div class="timeline-desc">13–15억 예산 확정, 서울 내 후보 지역 3곳 선정 (마포·서대문·강서)</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot dot-done">✓</div>
+      <div class="timeline-content">
+        <div class="timeline-date">2025년 11–12월</div>
+        <div class="timeline-step-title">단지 조사 & 임장 <span class="badge badge-done">완료</span></div>
+        <div class="timeline-desc">총 8개 단지 직접 방문. KB시세·실거래가 비교, 주변 환경 확인 완료</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot dot-active">●</div>
+      <div class="timeline-content">
+        <div class="timeline-date">2026년 1–2월</div>
+        <div class="timeline-step-title">최종 후보 3곳 협상 중 <span class="badge badge-active">진행중</span></div>
+        <div class="timeline-desc">가격 협상 및 계약 조건 검토. 법무사 상담 예정</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot dot-pending">○</div>
+      <div class="timeline-content">
+        <div class="timeline-date">2026년 3월 예정</div>
+        <div class="timeline-step-title">최종 계약 & 입주 준비 <span class="badge badge-pending">예정</span></div>
+        <div class="timeline-desc">계약 체결 후 인테리어·이사 일정 조율</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- SECTION 2: MAP -->
+<section id="map">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">후보 단지 지도</h2>
+  </div>
+  <!-- ⚠️ 네이버 지도 API 키 안내 -->
+  <div class="map-api-notice">
+    <span>⚠️</span>
+    <div>
+      <strong>API 키 설정 필요</strong><br>
+      아래 <code>YOUR_CLIENT_ID</code>를 본인의 네이버 클라우드 플랫폼 Client ID로 교체하세요.
+      발급: <a href="https://console.ncloud.com/naver-service/application" target="_blank" style="color:var(--accent)">console.ncloud.com</a>
+      → Maps → Web Dynamic Map → 애플리케이션 등록
+    </div>
+  </div>
+
+  <div class="map-container">
+    <div id="naver-map"></div>
+  </div>
+
+  <div class="map-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#C8733A"></div> A. 현대홈타운 2차 (1순위)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#4A7C59"></div> B. DMC파크뷰자이 (2순위)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1C1C1E"></div> C. 마곡 단지 (검토중)</div>
+  </div>
+
+  <!-- COMPARISON CARDS -->
+  <div class="compare-grid">
+    <!-- Card A -->
+    <div class="compare-card winner">
+      <div class="winner-ribbon">⭐ 1순위 후보</div>
+      <div class="card-header">
+        <div style="display:flex;align-items:flex-start">
+          <div class="card-num accent-num">A</div>
+          <div>
+            <div class="card-name">현대홈타운 2차</div>
+            <div class="card-location">마포구 도화동 · 공덕역 5분</div>
+          </div>
+        </div>
+        <div class="card-price">
+          <div class="card-price-main">14.4억</div>
+          <div class="card-price-sub">KB시세 기준</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-row"><span class="card-row-label">세대수</span><span class="card-row-value">914세대</span></div>
+        <div class="card-row"><span class="card-row-label">입주연도</span><span class="card-row-value">2000년</span></div>
+        <div class="card-row"><span class="card-row-label">전용면적</span><span class="card-row-value">84㎡</span></div>
+        <div class="card-row"><span class="card-row-label">지하철</span><span class="card-row-value">5·6·9호선</span></div>
+        <div class="card-row"><span class="card-row-label">학교</span><span class="card-row-value">단지 내 마포초</span></div>
+        <div class="card-row"><span class="card-row-label">실거래가</span><span class="card-row-value">16.1억 (10월)</span></div>
+      </div>
+      <div class="card-tags">
+        <span class="tag pro">✓ 교통 최강</span>
+        <span class="tag pro">✓ 초품아</span>
+        <span class="tag pro">✓ 조망 우수</span>
+        <span class="tag con">✗ 연식 오래됨</span>
+        <span class="tag con">✗ 실거래가 높음</span>
+      </div>
+      <div class="rating-section">
+        <div class="rating-row">
+          <span class="rating-label">재원</span>
+          <div class="stars" data-card="A" data-person="jw"></div>
+          <span class="rating-score" id="score-A-jw">-</span>
+        </div>
+        <div class="rating-row">
+          <span class="rating-label">희영</span>
+          <div class="stars" data-card="A" data-person="hy"></div>
+          <span class="rating-score" id="score-A-hy">-</span>
+        </div>
+        <hr class="avg-divider">
+        <div class="rating-row">
+          <span class="rating-label avg-label">평균</span>
+          <div class="stars avg-stars" id="avg-stars-A"></div>
+          <span class="rating-score avg-score" id="score-A-avg">-</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card B -->
+    <div class="compare-card">
+      <div class="card-header">
+        <div style="display:flex;align-items:flex-start">
+          <div class="card-num">B</div>
+          <div>
+            <div class="card-name">DMC파크뷰자이</div>
+            <div class="card-location">서대문구 남가좌동 · 가좌역</div>
+          </div>
+        </div>
+        <div class="card-price">
+          <div class="card-price-main">14.2억</div>
+          <div class="card-price-sub">KB시세 기준</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-row"><span class="card-row-label">세대수</span><span class="card-row-value">4,300세대</span></div>
+        <div class="card-row"><span class="card-row-label">입주연도</span><span class="card-row-value">2015년</span></div>
+        <div class="card-row"><span class="card-row-label">전용면적</span><span class="card-row-value">82㎡</span></div>
+        <div class="card-row"><span class="card-row-label">지하철</span><span class="card-row-value">경의중앙선</span></div>
+        <div class="card-row"><span class="card-row-label">학교</span><span class="card-row-value">단지 내 가재울초</span></div>
+        <div class="card-row"><span class="card-row-label">실거래가</span><span class="card-row-value">15억 (10월)</span></div>
+      </div>
+      <div class="card-tags">
+        <span class="tag pro">✓ 신축에 가까움</span>
+        <span class="tag pro">✓ 대단지</span>
+        <span class="tag pro">✓ 초품아</span>
+        <span class="tag con">✗ 전철 약함</span>
+        <span class="tag con">✗ 상권 아쉬움</span>
+      </div>
+      <div class="rating-section">
+        <div class="rating-row">
+          <span class="rating-label">재원</span>
+          <div class="stars" data-card="B" data-person="jw"></div>
+          <span class="rating-score" id="score-B-jw">-</span>
+        </div>
+        <div class="rating-row">
+          <span class="rating-label">희영</span>
+          <div class="stars" data-card="B" data-person="hy"></div>
+          <span class="rating-score" id="score-B-hy">-</span>
+        </div>
+        <hr class="avg-divider">
+        <div class="rating-row">
+          <span class="rating-label avg-label">평균</span>
+          <div class="stars avg-stars" id="avg-stars-B"></div>
+          <span class="rating-score avg-score" id="score-B-avg">-</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card C -->
+    <div class="compare-card">
+      <div class="card-header">
+        <div style="display:flex;align-items:flex-start">
+          <div class="card-num">C</div>
+          <div>
+            <div class="card-name">마곡 단지 (검토중)</div>
+            <div class="card-location">강서구 마곡동 · 마곡나루역</div>
+          </div>
+        </div>
+        <div class="card-price">
+          <div class="card-price-main">14.6억</div>
+          <div class="card-price-sub">KB시세 기준</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-row"><span class="card-row-label">세대수</span><span class="card-row-value">600세대+</span></div>
+        <div class="card-row"><span class="card-row-label">입주연도</span><span class="card-row-value">2017년</span></div>
+        <div class="card-row"><span class="card-row-label">전용면적</span><span class="card-row-value">84㎡</span></div>
+        <div class="card-row"><span class="card-row-label">지하철</span><span class="card-row-value">9호선·공항철도</span></div>
+        <div class="card-row"><span class="card-row-label">특이사항</span><span class="card-row-value">마곡업무지구</span></div>
+        <div class="card-row"><span class="card-row-label">실거래가</span><span class="card-row-value">16억 (10월)</span></div>
+      </div>
+      <div class="card-tags">
+        <span class="tag pro">✓ 신축 단지</span>
+        <span class="tag pro">✓ 업무지구 인접</span>
+        <span class="tag con">✗ 도심 접근성</span>
+        <span class="tag con">✗ 실거래가 높음</span>
+      </div>
+      <div class="rating-section">
+        <div class="rating-row">
+          <span class="rating-label">재원</span>
+          <div class="stars" data-card="C" data-person="jw"></div>
+          <span class="rating-score" id="score-C-jw">-</span>
+        </div>
+        <div class="rating-row">
+          <span class="rating-label">희영</span>
+          <div class="stars" data-card="C" data-person="hy"></div>
+          <span class="rating-score" id="score-C-hy">-</span>
+        </div>
+        <hr class="avg-divider">
+        <div class="rating-row">
+          <span class="rating-label avg-label">평균</span>
+          <div class="stars avg-stars" id="avg-stars-C"></div>
+          <span class="rating-score avg-score" id="score-C-avg">-</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- SECTION 3: CHECKLIST -->
+<section id="checklist">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">체크리스트 & 진행상황</h2>
+  </div>
+
+  <!-- Progress Summary -->
+  <div class="progress-summary">
+    <div class="progress-card">
+      <div class="progress-circle">
+        <svg width="64" height="64" viewBox="0 0 64 64">
+          <circle cx="32" cy="32" r="26" fill="none" stroke="#E2DDD8" stroke-width="4"/>
+          <circle cx="32" cy="32" r="26" fill="none" stroke="#4A7C59" stroke-width="4"
+            stroke-dasharray="163" stroke-dashoffset="49" stroke-linecap="round"/>
+        </svg>
+        <div class="progress-circle-text">70%</div>
+      </div>
+      <div class="progress-card-label">서류 준비</div>
+    </div>
+    <div class="progress-card">
+      <div class="progress-circle">
+        <svg width="64" height="64" viewBox="0 0 64 64">
+          <circle cx="32" cy="32" r="26" fill="none" stroke="#E2DDD8" stroke-width="4"/>
+          <circle cx="32" cy="32" r="26" fill="none" stroke="#C8733A" stroke-width="4"
+            stroke-dasharray="163" stroke-dashoffset="82" stroke-linecap="round"/>
+        </svg>
+        <div class="progress-circle-text">50%</div>
+      </div>
+      <div class="progress-card-label">임장 & 비교</div>
+    </div>
+    <div class="progress-card">
+      <div class="progress-circle">
+        <svg width="64" height="64" viewBox="0 0 64 64">
+          <circle cx="32" cy="32" r="26" fill="none" stroke="#E2DDD8" stroke-width="4"/>
+          <circle cx="32" cy="32" r="26" fill="none" stroke="#B8963E" stroke-width="4"
+            stroke-dasharray="163" stroke-dashoffset="130" stroke-linecap="round"/>
+        </svg>
+        <div class="progress-circle-text">20%</div>
+      </div>
+      <div class="progress-card-label">계약 & 자금</div>
+    </div>
+    <div class="progress-card">
+      <div class="progress-circle">
+        <svg width="64" height="64" viewBox="0 0 64 64">
+          <circle cx="32" cy="32" r="26" fill="none" stroke="#E2DDD8" stroke-width="4"/>
+          <circle cx="32" cy="32" r="26" fill="none" stroke="#E2DDD8" stroke-width="4"
+            stroke-dasharray="163" stroke-dashoffset="163" stroke-linecap="round"/>
+        </svg>
+        <div class="progress-circle-text">0%</div>
+      </div>
+      <div class="progress-card-label">이사 준비</div>
+    </div>
+  </div>
+
+  <!-- Checklist Groups -->
+  <div class="checklist-group">
+    <div class="checklist-group-title">📄 서류 & 자금 준비</div>
+    <div class="checklist-items">
+      <div class="check-item"><div class="check-box checked">✓</div><span class="check-text done">주택청약종합저축 확인</span></div>
+      <div class="check-item"><div class="check-box checked">✓</div><span class="check-text done">주택담보대출 한도 조회</span><span class="check-note">6억 확인</span></div>
+      <div class="check-item"><div class="check-box checked">✓</div><span class="check-text done">취득세·중개수수료 계산</span></div>
+      <div class="check-item"><div class="check-box partial">→</div><span class="check-text">법무사 상담 예약</span><span class="check-note">2월 예정</span></div>
+      <div class="check-item"><div class="check-box"></div><span class="check-text">자금 조달 계획서 작성</span></div>
+    </div>
+  </div>
+
+  <div class="checklist-group">
+    <div class="checklist-group-title">🏠 임장 & 단지 확인</div>
+    <div class="checklist-items">
+      <div class="check-item"><div class="check-box checked">✓</div><span class="check-text done">후보 단지 1차 리스트 작성 (8곳)</span></div>
+      <div class="check-item"><div class="check-box checked">✓</div><span class="check-text done">A·B·C 단지 직접 방문</span></div>
+      <div class="check-item"><div class="check-box checked">✓</div><span class="check-text done">주변 학교·상권·교통 확인</span></div>
+      <div class="check-item"><div class="check-box partial">→</div><span class="check-text">관리비·주차 현황 추가 확인</span><span class="check-note">진행중</span></div>
+      <div class="check-item"><div class="check-box"></div><span class="check-text">최종 후보 재방문 (2회차 임장)</span></div>
+    </div>
+  </div>
+
+  <div class="checklist-group">
+    <div class="checklist-group-title">✍️ 계약 & 이사</div>
+    <div class="checklist-items">
+      <div class="check-item"><div class="check-box partial">→</div><span class="check-text">매도인 협상 진행</span><span class="check-note">진행중</span></div>
+      <div class="check-item"><div class="check-box"></div><span class="check-text">계약서 검토 (법무사)</span></div>
+      <div class="check-item"><div class="check-box"></div><span class="check-text">계약금 납입</span></div>
+      <div class="check-item"><div class="check-box"></div><span class="check-text">이사업체 3곳 견적 비교</span></div>
+      <div class="check-item"><div class="check-box"></div><span class="check-text">인테리어 계획 수립</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- SECTION 4: FINAL REVEAL -->
+<div class="reveal-section" id="reveal">
+  <div class="reveal-eyebrow">04 · FINAL DECISION</div>
+  <h2 class="reveal-title">우리의 최종<br>선택은...</h2>
+
+  <!-- PENDING STATE - replace with reveal card when decision is made -->
+  <div class="reveal-pending">
+    <div class="reveal-pending-icon">🔒</div>
+    <p style="font-weight:500;margin-bottom:8px">아직 결정 중이에요!</p>
+    <p style="font-size:13px">계약이 완료되면 이 자리에 최종 결과를 공개할게요 😊</p>
+  </div>
+
+  <!--
+  ✅ 결정 후 아래 코드로 교체하세요:
+
+  <div class="reveal-card">
+    <div class="reveal-apt-name">현대홈타운 2차</div>
+    <div class="reveal-apt-sub">서울 마포구 도화동 · 공덕역 5분 · 914세대</div>
+    <div class="reveal-stats">
+      <div class="reveal-stat">
+        <div class="reveal-stat-value">14.4억</div>
+        <div class="reveal-stat-label">KB시세</div>
+      </div>
+      <div class="reveal-stat">
+        <div class="reveal-stat-value">84㎡</div>
+        <div class="reveal-stat-label">전용면적</div>
+      </div>
+      <div class="reveal-stat">
+        <div class="reveal-stat-value">2000</div>
+        <div class="reveal-stat-label">입주연도</div>
+      </div>
+    </div>
+    <p class="reveal-message">
+      긴 고민 끝에 공덕역 역세권과 단지 내 초등학교가 있는 이곳으로 결정했어요.
+      많이 응원해주세요! 💍
+    </p>
+  </div>
+  -->
+</div>
+
+<!-- STICKY NAV -->
+<nav class="sticky-nav">
+  <button class="nav-btn" onclick="document.getElementById('journey').scrollIntoView({behavior:'smooth'})">여정</button>
+  <button class="nav-btn" onclick="document.getElementById('map').scrollIntoView({behavior:'smooth'})">지도 & 비교</button>
+  <button class="nav-btn" onclick="document.getElementById('checklist').scrollIntoView({behavior:'smooth'})">체크리스트</button>
+  <button class="nav-btn" onclick="document.getElementById('reveal').scrollIntoView({behavior:'smooth'})">최종 결정</button>
+</nav>
+
+<!-- ✅ 네이버 지도 API: YOUR_CLIENT_ID를 발급받은 키로 교체하세요 -->
+<script type="text/javascript"
+  src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=YOUR_CLIENT_ID&language=ko">
+</script>
+
+<script>
+  // ── 네이버 지도 초기화 ──────────────────────────────────────────
+  function initNaverMap() {
+    if (typeof naver === 'undefined') {
+      document.getElementById('naver-map').innerHTML =
+        '<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#F0EBE4;color:#6B6560;font-size:13px;gap:8px">' +
+        '<span style="font-size:32px">🗺️</span>' +
+        '<strong>네이버 지도를 불러오지 못했습니다</strong>' +
+        '<span>CLIENT_ID를 확인하고 새로고침해주세요</span>' +
+        '</div>';
+      return;
+    }
+
+    // 후보 단지 좌표 & 정보
+    const candidates = [
+      {
+        name: 'A. 현대홈타운 2차',
+        address: '마포구 도화동 · 공덕역 5분',
+        price: '14.4억',
+        rank: '1순위',
+        color: '#C8733A',
+        lat: 37.5447,
+        lng: 126.9536,
+      },
+      {
+        name: 'B. DMC파크뷰자이',
+        address: '서대문구 남가좌동 · 가좌역',
+        price: '14.2억',
+        rank: '2순위',
+        color: '#4A7C59',
+        lat: 37.5698,
+        lng: 126.9149,
+      },
+      {
+        name: 'C. 마곡 단지',
+        address: '강서구 마곡동 · 마곡나루역',
+        price: '14.6억',
+        rank: '검토중',
+        color: '#1C1C1E',
+        lat: 37.5577,
+        lng: 126.8305,
+      },
+    ];
+
+    // 세 단지의 중심 좌표
+    const centerLat = candidates.reduce((s, c) => s + c.lat, 0) / candidates.length;
+    const centerLng = candidates.reduce((s, c) => s + c.lng, 0) / candidates.length;
+
+    const map = new naver.maps.Map('naver-map', {
+      center: new naver.maps.LatLng(centerLat, centerLng),
+      zoom: 12,
+      mapTypeControl: false,
+      scaleControl: true,
+      logoControl: true,
+      mapDataControl: false,
+    });
+
+    const infoWindows = [];
+
+    candidates.forEach((apt, i) => {
+      // 커스텀 마커 HTML
+      const markerHtml = `
+        <div style="
+          background:${apt.color};
+          color:white;
+          padding:7px 13px;
+          border-radius:20px;
+          font-size:12px;
+          font-weight:500;
+          font-family:'Noto Sans KR',sans-serif;
+          white-space:nowrap;
+          box-shadow:0 3px 10px rgba(0,0,0,0.25);
+          cursor:pointer;
+          position:relative;
+        ">
+          ${apt.name}
+          <div style="
+            position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);
+            border:7px solid transparent;border-top-color:${apt.color};border-bottom:none;
+          "></div>
+        </div>`;
+
+      const marker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(apt.lat, apt.lng),
+        map: map,
+        icon: {
+          content: markerHtml,
+          anchor: new naver.maps.Point(60, 38),
+        },
+      });
+
+      // 인포윈도우
+      const iw = new naver.maps.InfoWindow({
+        content: `
+          <div style="
+            padding:16px 18px;
+            font-family:'Noto Sans KR',sans-serif;
+            min-width:200px;
+            border-radius:10px;
+          ">
+            <div style="font-size:11px;color:${apt.color};letter-spacing:1px;margin-bottom:4px;font-weight:500">${apt.rank}</div>
+            <div style="font-size:15px;font-weight:700;margin-bottom:2px">${apt.name}</div>
+            <div style="font-size:12px;color:#888;margin-bottom:10px">${apt.address}</div>
+            <div style="
+              background:#F9F6F0;border-radius:8px;padding:10px 14px;
+              font-size:13px;display:flex;justify-content:space-between;align-items:center;
+            ">
+              <span style="color:#888">KB시세</span>
+              <span style="font-weight:700;color:${apt.color};font-size:16px">${apt.price}</span>
+            </div>
+          </div>`,
+        borderWidth: 0,
+        backgroundColor: 'white',
+        borderRadius: '12px',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+        pixelOffset: new naver.maps.Point(0, -12),
+        disableAnchor: true,
+      });
+
+      infoWindows.push(iw);
+
+      naver.maps.Event.addListener(marker, 'click', () => {
+        infoWindows.forEach((w, j) => { if (j !== i) w.close(); });
+        iw.getMap() ? iw.close() : iw.open(map, marker);
+      });
+    });
+  }
+
+  // API 로드 후 실행
+  window.addEventListener('load', initNaverMap);
+
+  // ── 별점 시스템 ───────────────────────────────────────────────
+  const ratings = { A: { jw: 0, hy: 0 }, B: { jw: 0, hy: 0 }, C: { jw: 0, hy: 0 } };
+
+  // SVG 별 생성 (empty / half / full)
+  function starSVG(type) {
+    const gold = '#F5A623';
+    const empty = '#E2DDD8';
+    if (type === 'full') {
+      return `<svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${gold}" stroke="${gold}" stroke-width="1"/></svg>`;
+    } else if (type === 'half') {
+      return `<svg viewBox="0 0 24 24">
+        <defs><clipPath id="half"><rect x="0" y="0" width="12" height="24"/></clipPath></defs>
+        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${empty}" stroke="${empty}" stroke-width="1"/>
+        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${gold}" stroke="${gold}" stroke-width="1" clip-path="url(#half)"/>
+      </svg>`;
+    } else {
+      return `<svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${empty}" stroke="${empty}" stroke-width="1"/></svg>`;
+    }
+  }
+
+  // 별 5개 렌더링
+  function renderStars(container, value, interactive) {
+    container.innerHTML = '';
+    for (let i = 1; i <= 5; i++) {
+      const wrap = document.createElement('div');
+      wrap.className = 'star-wrap';
+
+      let type = 'empty';
+      if (value >= i) type = 'full';
+      else if (value >= i - 0.5) type = 'half';
+      wrap.innerHTML = starSVG(type);
+
+      if (interactive) {
+        // 왼쪽 클릭 = 반점, 오른쪽 클릭 = 한 개
+        const halfZone = document.createElement('div');
+        halfZone.className = 'star-half-zone';
+        halfZone.addEventListener('click', () => {
+          const card = container.dataset.card;
+          const person = container.dataset.person;
+          const newVal = i - 0.5;
+          ratings[card][person] = (ratings[card][person] === newVal) ? 0 : newVal;
+          updateRatings(card);
+        });
+
+        const fullZone = document.createElement('div');
+        fullZone.className = 'star-full-zone';
+        fullZone.addEventListener('click', () => {
+          const card = container.dataset.card;
+          const person = container.dataset.person;
+          const newVal = i;
+          ratings[card][person] = (ratings[card][person] === newVal) ? 0 : newVal;
+          updateRatings(card);
+        });
+
+        // hover preview
+        halfZone.addEventListener('mouseenter', () => renderStars(container, i - 0.5, false));
+        fullZone.addEventListener('mouseenter', () => renderStars(container, i, false));
+        wrap.addEventListener('mouseleave', () => {
+          const card = container.dataset.card;
+          const person = container.dataset.person;
+          renderStars(container, ratings[card][person], false);
+          // re-attach interactivity after re-render
+        });
+
+        wrap.appendChild(halfZone);
+        wrap.appendChild(fullZone);
+      }
+
+      container.appendChild(wrap);
+    }
+  }
+
+  function updateRatings(card) {
+    const jw = ratings[card].jw;
+    const hy = ratings[card].hy;
+
+    // re-render interactive stars
+    document.querySelectorAll(`.stars[data-card="${card}"]`).forEach(el => {
+      const person = el.dataset.person;
+      renderStars(el, ratings[card][person], true);
+    });
+
+    // score text
+    document.getElementById(`score-${card}-jw`).textContent = jw > 0 ? jw.toFixed(1) : '-';
+    document.getElementById(`score-${card}-hy`).textContent = hy > 0 ? hy.toFixed(1) : '-';
+
+    // average
+    const bothRated = jw > 0 && hy > 0;
+    const avg = bothRated ? Math.round((jw + hy) / 2 * 2) / 2 : 0;
+    const avgEl = document.getElementById(`score-${card}-avg`);
+    const avgStarsEl = document.getElementById(`avg-stars-${card}`);
+    avgEl.textContent = bothRated ? avg.toFixed(1) : '-';
+    renderStars(avgStarsEl, avg, false);
+  }
+
+  // 초기화 — 모든 별점 위젯 렌더링
+  function initStars() {
+    document.querySelectorAll('.stars[data-card]').forEach(el => {
+      const card = el.dataset.card;
+      const person = el.dataset.person;
+      renderStars(el, ratings[card][person], true);
+    });
+    ['A', 'B', 'C'].forEach(card => {
+      const avgStarsEl = document.getElementById(`avg-stars-${card}`);
+      renderStars(avgStarsEl, 0, false);
+    });
+  }
+
+  initStars();
+
+  // ── 네비게이션 스크롤 ───────────────────────────────────────────
+  const sections = ['journey', 'map', 'checklist', 'reveal'];
+  const navBtns = document.querySelectorAll('.nav-btn');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && window.scrollY >= el.offsetTop - 200) current = id;
+    });
+    navBtns.forEach((btn, i) => {
+      btn.classList.toggle('active', i === sections.indexOf(current));
+    });
+  });
+
+  // ── 체크리스트 클릭 토글 ──────────────────────────────────────
+  document.querySelectorAll('.check-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const box = item.querySelector('.check-box');
+      const text = item.querySelector('.check-text');
+      if (box.classList.contains('checked')) {
+        box.classList.remove('checked');
+        box.textContent = '';
+        text.classList.remove('done');
+      } else {
+        box.classList.remove('partial');
+        box.classList.add('checked');
+        box.textContent = '✓';
+        text.classList.add('done');
+      }
+    });
+  });
+</script>
+</body>
+</html>
