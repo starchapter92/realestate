@@ -3,1465 +3,970 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>우리의 신혼집 찾기</title>
+<title>우리 신혼집 찾기</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=YOUR_CLIENT_ID&language=ko"></script>
 <style>
-  :root {
-    --cream: #F9F6F0;
-    --charcoal: #1C1C1E;
-    --warm-gray: #6B6560;
-    --accent: #C8733A;
-    --accent-light: #F0DDD0;
-    --border: #E2DDD8;
-    --green: #4A7C59;
-    --green-light: #D6EAD9;
-    --red-light: #FAE8E8;
-    --red: #C0392B;
-    --gold: #B8963E;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--cream);
-    color: var(--charcoal);
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 300;
-    line-height: 1.7;
-  }
-
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 60px 24px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 70% 50% at 20% 30%, rgba(200,115,58,0.07) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 60% at 80% 70%, rgba(74,124,89,0.06) 0%, transparent 60%);
-  }
-
-  .hero-eyebrow {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 12px;
-    letter-spacing: 4px;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 24px;
-    position: relative;
-  }
-
-  .hero-title {
-    font-family: 'Noto Serif KR', serif;
-    font-size: clamp(36px, 8vw, 72px);
-    font-weight: 300;
-    line-height: 1.2;
-    letter-spacing: -1px;
-    margin-bottom: 20px;
-    position: relative;
-  }
-
-  .hero-title em {
-    font-style: normal;
-    color: var(--accent);
-  }
-
-  .hero-sub {
-    font-size: 15px;
-    color: var(--warm-gray);
-    max-width: 400px;
-    margin: 0 auto 40px;
-    position: relative;
-  }
-
-  .progress-bar-wrap {
-    width: min(400px, 100%);
-    background: var(--border);
-    border-radius: 100px;
-    height: 6px;
-    margin: 0 auto 12px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .progress-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--gold));
-    border-radius: 100px;
-    width: 60%;
-    animation: fillBar 1.8s ease forwards;
-  }
-
-  @keyframes fillBar {
-    from { width: 0 }
-    to { width: 60% }
-  }
-
-  .progress-label {
-    font-size: 12px;
-    color: var(--warm-gray);
-    letter-spacing: 1px;
-  }
-
-  .scroll-hint {
-    position: absolute;
-    bottom: 32px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 11px;
-    color: var(--warm-gray);
-    letter-spacing: 2px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .scroll-hint::after {
-    content: '';
-    display: block;
-    width: 1px;
-    height: 32px;
-    background: var(--accent);
-    animation: scrollLine 1.5s ease-in-out infinite;
-  }
-
-  @keyframes scrollLine {
-    0%, 100% { opacity: 0.3; transform: scaleY(1); }
-    50% { opacity: 1; transform: scaleY(1.3); }
-  }
-
-  /* ── SECTION BASE ── */
-  section {
-    padding: 80px 24px;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  .section-header {
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
-    margin-bottom: 48px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .section-num {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 11px;
-    color: var(--accent);
-    letter-spacing: 3px;
-    white-space: nowrap;
-  }
-
-  .section-title {
-    font-family: 'Noto Serif KR', serif;
-    font-size: clamp(22px, 4vw, 32px);
-    font-weight: 400;
-  }
-
-  /* ── TIMELINE ── */
-  .timeline {
-    position: relative;
-    padding-left: 0;
-  }
-
-  .timeline::before {
-    content: '';
-    position: absolute;
-    left: 16px;
-    top: 8px;
-    bottom: 8px;
-    width: 1px;
-    background: var(--border);
-  }
-
-  .timeline-item {
-    display: flex;
-    gap: 32px;
-    margin-bottom: 36px;
-    align-items: flex-start;
-    animation: fadeUp 0.6s ease both;
-  }
-
-  .timeline-item:nth-child(1) { animation-delay: 0.1s }
-  .timeline-item:nth-child(2) { animation-delay: 0.2s }
-  .timeline-item:nth-child(3) { animation-delay: 0.3s }
-  .timeline-item:nth-child(4) { animation-delay: 0.4s }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .timeline-dot {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .dot-done { background: var(--green); color: white; }
-  .dot-active { background: var(--accent); color: white; box-shadow: 0 0 0 4px var(--accent-light); }
-  .dot-pending { background: var(--border); color: var(--warm-gray); }
-
-  .timeline-content { flex: 1; padding-top: 4px; }
-
-  .timeline-date {
-    font-size: 11px;
-    color: var(--warm-gray);
-    letter-spacing: 1px;
-    margin-bottom: 4px;
-  }
-
-  .timeline-step-title {
-    font-weight: 500;
-    margin-bottom: 4px;
-    font-size: 15px;
-  }
-
-  .timeline-desc {
-    font-size: 13px;
-    color: var(--warm-gray);
-  }
-
-  .badge {
-    display: inline-block;
-    font-size: 10px;
-    padding: 2px 8px;
-    border-radius: 100px;
-    letter-spacing: 1px;
-    margin-left: 8px;
-    font-weight: 500;
-  }
-
-  .badge-done { background: var(--green-light); color: var(--green); }
-  .badge-active { background: var(--accent-light); color: var(--accent); }
-  .badge-pending { background: var(--border); color: var(--warm-gray); }
-
-  /* ── MAP ── */
-  .map-container {
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    margin-bottom: 16px;
-    position: relative;
-    height: 420px;
-  }
-
-  #naver-map {
-    width: 100%;
-    height: 100%;
-  }
-
-  .map-api-notice {
-    background: var(--accent-light);
-    border: 1px solid var(--accent);
-    border-radius: 10px;
-    padding: 14px 18px;
-    font-size: 13px;
-    color: var(--accent);
-    margin-bottom: 32px;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .map-api-notice code {
-    background: rgba(200,115,58,0.15);
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-family: monospace;
-  }
-
-  .map-legend {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-bottom: 28px;
-    padding: 12px 16px;
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    font-size: 12px;
-  }
-
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--warm-gray);
-  }
-
-  .legend-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  /* ── COMPARISON TABLE ── */
-  .compare-grid {
-    display: grid;
-    gap: 20px;
-  }
-
-  .compare-card {
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    background: white;
-    transition: box-shadow 0.2s;
-  }
-
-  .compare-card:hover {
-    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-  }
-
-  .compare-card.winner {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 1px var(--accent);
-  }
-
-  .card-header {
-    padding: 20px 24px 16px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .card-num {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--charcoal);
-    color: white;
-    font-size: 12px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin-right: 12px;
-    margin-top: 2px;
-  }
-
-  .card-num.accent-num { background: var(--accent); }
-
-  .card-name {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 17px;
-    font-weight: 600;
-    margin-bottom: 2px;
-  }
-
-  .card-location {
-    font-size: 12px;
-    color: var(--warm-gray);
-  }
-
-  .card-price {
-    text-align: right;
-    flex-shrink: 0;
-  }
-
-  .card-price-main {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--accent);
-  }
-
-  .card-price-sub {
-    font-size: 11px;
-    color: var(--warm-gray);
-  }
-
-  .card-body {
-    padding: 20px 24px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px 24px;
-  }
-
-  .card-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 13px;
-    padding: 4px 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .card-row:last-child { border-bottom: none; }
-
-  .card-row-label { color: var(--warm-gray); }
-  .card-row-value { font-weight: 500; }
-
-  .card-tags {
-    padding: 0 24px 20px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  .tag {
-    font-size: 11px;
-    padding: 4px 10px;
-    border-radius: 100px;
-    border: 1px solid var(--border);
-    color: var(--warm-gray);
-  }
-
-  .tag.pro { background: var(--green-light); border-color: var(--green-light); color: var(--green); }
-  .tag.con { background: var(--red-light); border-color: var(--red-light); color: var(--red); }
-
-  .winner-ribbon {
-    background: var(--accent);
-    color: white;
-    font-size: 11px;
-    padding: 4px 12px;
-    letter-spacing: 1px;
-    text-align: center;
-    font-weight: 500;
-  }
-
-  /* ── STAR RATING ── */
-  .rating-section {
-    padding: 0 24px 20px;
-    border-top: 1px solid var(--border);
-    padding-top: 16px;
-  }
-
-  .rating-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-
-  .rating-row:last-child { margin-bottom: 0; }
-
-  .rating-label {
-    font-size: 12px;
-    color: var(--warm-gray);
-    width: 56px;
-    flex-shrink: 0;
-  }
-
-  .rating-label.avg-label {
-    font-weight: 600;
-    color: var(--charcoal);
-  }
-
-  .stars {
-    display: flex;
-    gap: 3px;
-    position: relative;
-  }
-
-  .star-wrap {
-    position: relative;
-    width: 22px;
-    height: 22px;
-    cursor: pointer;
-  }
-
-  .star-wrap svg {
-    position: absolute;
-    top: 0; left: 0;
-    width: 22px; height: 22px;
-    pointer-events: none;
-  }
-
-  /* half-click zone: left = half, right = full */
-  .star-half-zone {
-    position: absolute;
-    top: 0; left: 0;
-    width: 50%; height: 100%;
-    z-index: 2;
-  }
-
-  .star-full-zone {
-    position: absolute;
-    top: 0; right: 0;
-    width: 50%; height: 100%;
-    z-index: 2;
-  }
-
-  .rating-score {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--accent);
-    width: 28px;
-    text-align: right;
-    flex-shrink: 0;
-  }
-
-  .rating-score.avg-score {
-    color: var(--gold);
-    font-size: 15px;
-  }
-
-  .avg-divider {
-    border: none;
-    border-top: 1px dashed var(--border);
-    margin: 10px 0;
-  }
-
-  .avg-stars .star-wrap { cursor: default; }
-  .avg-stars .star-half-zone,
-  .avg-stars .star-full-zone { pointer-events: none; }
-
-  /* ── CHECKLIST ── */
-  .checklist-group { margin-bottom: 36px; }
-
-  .checklist-group-title {
-    font-size: 12px;
-    letter-spacing: 2px;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 14px;
-    font-weight: 500;
-  }
-
-  .checklist-items { display: flex; flex-direction: column; gap: 2px; }
-
-  .check-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 12px 16px;
-    border-radius: 8px;
-    transition: background 0.15s;
-    cursor: pointer;
-  }
-
-  .check-item:hover { background: rgba(0,0,0,0.02); }
-
-  .check-box {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 1.5px solid var(--border);
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    transition: all 0.2s;
-  }
-
-  .check-box.checked {
-    background: var(--green);
-    border-color: var(--green);
-    color: white;
-  }
-
-  .check-box.partial {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: white;
-  }
-
-  .check-text {
-    font-size: 14px;
-    flex: 1;
-  }
-
-  .check-text.done {
-    text-decoration: line-through;
-    color: var(--warm-gray);
-  }
-
-  .check-note {
-    font-size: 11px;
-    color: var(--warm-gray);
-    background: var(--border);
-    padding: 2px 8px;
-    border-radius: 100px;
-    white-space: nowrap;
-  }
-
-  /* Progress donut */
-  .progress-summary {
-    display: flex;
-    gap: 24px;
-    margin-bottom: 40px;
-    flex-wrap: wrap;
-  }
-
-  .progress-card {
-    flex: 1;
-    min-width: 120px;
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    text-align: center;
-  }
-
-  .progress-circle {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 10px;
-    position: relative;
-  }
-
-  .progress-circle svg { transform: rotate(-90deg); }
-
-  .progress-circle-text {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Noto Serif KR', serif;
-    font-size: 14px;
-    font-weight: 700;
-  }
-
-  .progress-card-label {
-    font-size: 12px;
-    color: var(--warm-gray);
-  }
-
-  /* ── REVEAL ── */
-  .reveal-section {
-    text-align: center;
-    padding: 80px 24px 100px;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-
-  .reveal-eyebrow {
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: var(--accent);
-    margin-bottom: 24px;
-    text-transform: uppercase;
-  }
-
-  .reveal-title {
-    font-family: 'Noto Serif KR', serif;
-    font-size: clamp(28px, 6vw, 48px);
-    font-weight: 300;
-    line-height: 1.3;
-    margin-bottom: 32px;
-  }
-
-  .reveal-card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 40px;
-    margin-bottom: 32px;
-    text-align: left;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .reveal-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--accent), var(--gold));
-  }
-
-  .reveal-apt-name {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 26px;
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-
-  .reveal-apt-sub {
-    font-size: 14px;
-    color: var(--warm-gray);
-    margin-bottom: 28px;
-  }
-
-  .reveal-stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-
-  .reveal-stat {
-    text-align: center;
-    padding: 16px;
-    background: var(--cream);
-    border-radius: 10px;
-  }
-
-  .reveal-stat-value {
-    font-family: 'Noto Serif KR', serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--accent);
-    margin-bottom: 4px;
-  }
-
-  .reveal-stat-label {
-    font-size: 11px;
-    color: var(--warm-gray);
-    letter-spacing: 0.5px;
-  }
-
-  .reveal-message {
-    font-size: 14px;
-    line-height: 1.9;
-    color: var(--warm-gray);
-    border-top: 1px solid var(--border);
-    padding-top: 24px;
-    font-style: italic;
-  }
-
-  .reveal-pending {
-    background: var(--cream);
-    border: 2px dashed var(--border);
-    border-radius: 16px;
-    padding: 48px 24px;
-    text-align: center;
-    color: var(--warm-gray);
-    font-size: 14px;
-  }
-
-  .reveal-pending-icon { font-size: 36px; margin-bottom: 12px; }
-
-  /* ── NAV ── */
-  .sticky-nav {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(28, 28, 30, 0.92);
-    backdrop-filter: blur(12px);
-    border-radius: 100px;
-    padding: 10px 20px;
-    display: flex;
-    gap: 4px;
-    z-index: 100;
-  }
-
-  .nav-btn {
-    color: rgba(255,255,255,0.6);
-    background: none;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 100px;
-    font-size: 12px;
-    cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif;
-    letter-spacing: 0.5px;
-    transition: all 0.2s;
-    white-space: nowrap;
-  }
-
-  .nav-btn:hover { color: white; }
-  .nav-btn.active { background: var(--accent); color: white; }
-
-  /* ── DIVIDER ── */
-  .section-divider {
-    max-width: 900px;
-    margin: 0 auto;
-    border: none;
-    border-top: 1px solid var(--border);
-  }
-
-  @media (max-width: 600px) {
-    .card-body { grid-template-columns: 1fr; }
-    .reveal-stats { grid-template-columns: repeat(2, 1fr); }
-    .progress-summary { flex-direction: column; }
-    .sticky-nav { width: calc(100% - 32px); justify-content: center; }
-    .nav-btn { padding: 8px 12px; font-size: 11px; }
-  }
+:root{
+  --bg:#F7F4EF;--white:#fff;--charcoal:#1A1A1A;--gray:#6B6560;
+  --border:#E4DED7;--accent:#C0622A;--gold:#B89140;--green:#3D7A52;--blue:#2B6CB0;
+  --purple:#6B46C1;--teal:#0D7377;
+  --rank1:#C0622A;--rank2:#B89140;--rank3:#3D7A52;
+  --son:#F5A623;--soff:#DDD8D2;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--charcoal);font-family:'Noto Sans KR',sans-serif;font-weight:300;line-height:1.6;}
+
+/* MAP */
+.map-wrap{position:relative;width:100%;height:62vh;min-height:380px;}
+#naver-map{width:100%;height:100%;}
+.map-title{position:absolute;top:16px;left:16px;background:rgba(26,26,26,.88);backdrop-filter:blur(8px);color:#fff;padding:9px 16px;border-radius:8px;font-family:'Noto Serif KR',serif;font-size:14px;z-index:10;pointer-events:none;}
+.map-fallback{position:absolute;inset:0;background:#EDE9E3;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--gray);font-size:13px;text-align:center;padding:24px;z-index:5;}
+.map-fallback strong{color:var(--accent);font-size:15px;display:block;}
+.map-fallback code{background:rgba(0,0,0,.07);padding:2px 7px;border-radius:4px;font-family:monospace;font-size:12px;}
+
+/* MAIN */
+.main{max-width:1060px;margin:0 auto;padding:28px 18px 80px;}
+.top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:10px;}
+.top-bar h2{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:400;}
+.sort-wrap{display:flex;gap:6px;align-items:center;font-size:11px;color:var(--gray);}
+.sort-btn{padding:5px 14px;border-radius:100px;border:1px solid var(--border);background:#fff;font-size:11px;cursor:pointer;color:var(--gray);font-family:'Noto Sans KR',sans-serif;transition:all .15s;}
+.sort-btn.on{background:var(--charcoal);color:#fff;border-color:var(--charcoal);}
+.data-note{font-size:11px;color:#aaa;margin-bottom:18px;}
+
+/* CARD */
+.cards{display:grid;gap:22px;}
+.card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:box-shadow .2s,transform .2s;position:relative;}
+.card:hover{box-shadow:0 10px 36px rgba(0,0,0,.09);transform:translateY(-1px);}
+.card.r1{border-color:var(--rank1);box-shadow:0 0 0 1.5px var(--rank1),0 4px 20px rgba(192,98,42,.13);}
+.card.r2{border-color:var(--rank2);box-shadow:0 0 0 1.5px var(--rank2),0 4px 20px rgba(184,145,64,.11);}
+.card.r3{border-color:var(--rank3);box-shadow:0 0 0 1.5px var(--rank3),0 4px 20px rgba(61,122,82,.11);}
+.rank-badge{position:absolute;top:10px;left:10px;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;z-index:5;box-shadow:0 2px 6px rgba(0,0,0,.25);}
+.r1 .rank-badge{background:var(--rank1);}
+.r2 .rank-badge{background:var(--rank2);}
+.r3 .rank-badge{background:var(--rank3);}
+
+/* apt image */
+.apt-img-wrap{position:relative;height:160px;overflow:hidden;background:#E0DBD4;}
+.apt-img{width:100%;height:160px;object-fit:cover;display:block;}
+.apt-img-overlay{position:absolute;bottom:0;left:0;right:0;height:64px;background:linear-gradient(transparent,rgba(0,0,0,.5));pointer-events:none;}
+.apt-img-label{position:absolute;bottom:10px;right:12px;font-size:9px;color:rgba(255,255,255,.7);letter-spacing:.3px;}
+.apt-kb-link{position:absolute;bottom:10px;left:12px;font-size:10px;color:rgba(255,255,255,.9);background:rgba(0,0,0,.35);padding:3px 8px;border-radius:100px;text-decoration:none;transition:background .15s;}
+.apt-kb-link:hover{background:rgba(0,0,0,.6);}
+
+/* card head */
+.c-head{padding:14px 18px 12px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start;}
+.c-idx{width:22px;height:22px;border-radius:50%;background:var(--charcoal);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:3px;}
+.c-name{font-family:'Noto Serif KR',serif;font-size:15px;font-weight:600;margin-bottom:2px;}
+.c-loc{font-size:11px;color:var(--gray);}
+.c-station{font-size:11px;color:var(--blue);margin-top:2px;}
+
+/* info */
+.c-info{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border);}
+.i-cell{padding:9px 13px;border-right:1px solid var(--border);}
+.i-cell:last-child{border-right:none;}
+.i-lbl{font-size:9px;color:var(--gray);letter-spacing:.4px;margin-bottom:2px;}
+.i-val{font-weight:500;font-size:12px;}
+
+/* school */
+.c-school{padding:10px 13px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;}
+.school-badge{display:inline-flex;align-items:center;gap:5px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:5px 10px;}
+.school-name{font-size:12px;font-weight:500;}
+.school-achievement{font-size:10px;padding:2px 7px;border-radius:100px;font-weight:600;margin-left:2px;}
+.ach-high{background:#D1FAE5;color:#065F46;}
+.ach-mid-high{background:#DBEAFE;color:#1E3A5F;}
+.ach-mid{background:#FEF3C7;color:#78350F;}
+.ach-low{background:#FEE2E2;color:#7F1D1D;}
+
+/* price */
+.c-price{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
+.p-block{padding:10px 13px;border-right:1px solid var(--border);}
+.p-block:last-child{border-right:none;}
+.p-type{font-size:9px;color:var(--gray);font-weight:600;letter-spacing:.5px;margin-bottom:5px;}
+.p-row{display:flex;justify-content:space-between;font-size:11px;padding:2px 0;}
+.p-row span:first-child{color:var(--gray);}
+.p-low{color:var(--blue);font-weight:600;}
+
+/* commute — 2 panels */
+.c-commute{border-bottom:1px solid var(--border);}
+.commute-tabs{display:flex;border-bottom:1px solid var(--border);}
+.ctab{flex:1;padding:7px 0;font-size:10px;text-align:center;cursor:pointer;color:var(--gray);background:var(--bg);border-right:1px solid var(--border);transition:all .15s;}
+.ctab:last-child{border-right:none;}
+.ctab.on{background:#fff;color:var(--charcoal);font-weight:600;}
+.commute-panel{display:none;padding:11px 13px;}
+.commute-panel.on{display:block;}
+.ct-title{font-size:9px;color:var(--gray);letter-spacing:.4px;margin-bottom:8px;font-weight:500;}
+.ct-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.ct-grid-wide{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.ct-item{background:var(--bg);border-radius:7px;padding:7px 9px;}
+.ct-dest{font-size:9px;font-weight:600;color:var(--charcoal);margin-bottom:4px;}
+.ct-rows{display:flex;flex-direction:column;gap:3px;}
+.ct-row{display:flex;align-items:center;gap:3px;font-size:10px;}
+.ct-row-lbl{color:var(--gray);width:22px;font-size:9px;flex-shrink:0;}
+.t-bus{color:var(--blue);font-weight:600;}
+.t-car{color:var(--green);font-weight:600;}
+.ct-dot{color:#ddd;font-size:9px;}
+
+/* infra */
+.c-infra{border-bottom:1px solid var(--border);padding:11px 13px;}
+.infra-title{font-size:9px;color:var(--gray);letter-spacing:.4px;margin-bottom:8px;font-weight:500;}
+.infra-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.infra-item{background:var(--bg);border-radius:7px;padding:7px 9px;}
+.infra-type{font-size:9px;color:var(--gray);margin-bottom:2px;}
+.infra-name{font-size:11px;font-weight:600;margin-bottom:2px;}
+.infra-dist{font-size:10px;color:var(--green);}
+.infra-car{font-size:10px;color:var(--gray);}
+
+/* star rating */
+.c-rating{padding:13px 13px 0;}
+.r-row{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.r-who{font-size:11px;color:var(--gray);width:30px;flex-shrink:0;font-weight:500;}
+.r-who.avg{color:var(--charcoal);font-weight:700;}
+.stars{display:flex;gap:2px;}
+.star{display:inline-block;width:18px;height:18px;cursor:pointer;position:relative;flex-shrink:0;}
+.star svg{width:18px;height:18px;pointer-events:none;display:block;}
+.avg-stars .star{cursor:default;}
+.r-val{font-size:13px;font-weight:700;font-family:'Noto Serif KR',serif;color:var(--accent);width:28px;text-align:right;flex-shrink:0;}
+.r-val.avg{color:var(--gold);font-size:14px;}
+.avg-div{border:none;border-top:1px dashed var(--border);margin:3px 0 9px;}
+
+/* comment */
+.c-comment{padding:9px 13px 14px;}
+.cm-lbl{font-size:9px;color:var(--gray);letter-spacing:.4px;margin-bottom:6px;}
+.cm-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.cm-wrap{display:flex;flex-direction:column;gap:2px;}
+.cm-who{font-size:9px;color:var(--gray);font-weight:500;}
+textarea.cm-input{width:100%;border:1px solid var(--border);border-radius:6px;padding:7px 9px;font-size:11px;font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--charcoal);outline:none;resize:none;transition:border-color .15s;}
+textarea.cm-input:focus{border-color:var(--accent);background:#fff;}
+textarea.cm-input::placeholder{color:#c5c0ba;}
+
+@media(max-width:640px){
+  .c-info{grid-template-columns:1fr 1fr;}
+  .ct-grid,.ct-grid-wide{grid-template-columns:1fr 1fr;}
+  .infra-grid{grid-template-columns:1fr 1fr;}
+  .cm-grid{grid-template-columns:1fr;}
+  .map-wrap{height:50vh;}
+  .apt-img{height:130px;}
+}
 </style>
 </head>
 <body>
 
-<!-- HERO -->
-<div class="hero" id="top">
-  <div class="hero-eyebrow">2025–2026 · 우리의 이야기</div>
-  <h1 class="hero-title">우리 <em>신혼집</em><br>찾기 프로젝트</h1>
-  <p class="hero-sub">함께 고르고, 함께 결정한 과정을 가족들과 나눠요</p>
-  <div class="progress-bar-wrap">
-    <div class="progress-bar-fill"></div>
+<div class="map-wrap">
+  <div class="map-title">🏠 신혼집 후보 단지 16곳</div>
+  <div id="naver-map"></div>
+  <div class="map-fallback" id="map-fallback">
+    <strong>⚠️ 지도 로드 실패</strong>
+    <p>HTML에서 <code>YOUR_CLIENT_ID</code>를 네이버 클라우드 Client ID로 교체하세요</p>
   </div>
-  <div class="progress-label">전체 진행률 60%</div>
-  <div class="scroll-hint">SCROLL</div>
 </div>
 
-<!-- SECTION 1: TIMELINE -->
-<section id="journey">
-  <div class="section-header">
-    <span class="section-num">01</span>
-    <h2 class="section-title">진행 여정</h2>
-  </div>
-  <div class="timeline">
-    <div class="timeline-item">
-      <div class="timeline-dot dot-done">✓</div>
-      <div class="timeline-content">
-        <div class="timeline-date">2025년 10월</div>
-        <div class="timeline-step-title">예산 & 지역 결정 <span class="badge badge-done">완료</span></div>
-        <div class="timeline-desc">13–15억 예산 확정, 서울 내 후보 지역 3곳 선정 (마포·서대문·강서)</div>
-      </div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-dot dot-done">✓</div>
-      <div class="timeline-content">
-        <div class="timeline-date">2025년 11–12월</div>
-        <div class="timeline-step-title">단지 조사 & 임장 <span class="badge badge-done">완료</span></div>
-        <div class="timeline-desc">총 8개 단지 직접 방문. KB시세·실거래가 비교, 주변 환경 확인 완료</div>
-      </div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-dot dot-active">●</div>
-      <div class="timeline-content">
-        <div class="timeline-date">2026년 1–2월</div>
-        <div class="timeline-step-title">최종 후보 3곳 협상 중 <span class="badge badge-active">진행중</span></div>
-        <div class="timeline-desc">가격 협상 및 계약 조건 검토. 법무사 상담 예정</div>
-      </div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-dot dot-pending">○</div>
-      <div class="timeline-content">
-        <div class="timeline-date">2026년 3월 예정</div>
-        <div class="timeline-step-title">최종 계약 & 입주 준비 <span class="badge badge-pending">예정</span></div>
-        <div class="timeline-desc">계약 체결 후 인테리어·이사 일정 조율</div>
-      </div>
+<div class="main">
+  <div class="top-bar">
+    <h2>후보 단지 비교 <span style="font-size:13px;font-weight:300;color:var(--gray);margin-left:6px;">16개 단지</span></h2>
+    <div class="sort-wrap">
+      <span>정렬</span>
+      <button class="sort-btn" data-s="default" onclick="sortCards('default')">기본순</button>
+      <button class="sort-btn on" data-s="rating" onclick="sortCards('rating')">평점 높은순</button>
     </div>
   </div>
-</section>
-
-<hr class="section-divider">
-
-<!-- SECTION 2: MAP -->
-<section id="map">
-  <div class="section-header">
-    <span class="section-num">02</span>
-    <h2 class="section-title">후보 단지 지도</h2>
-  </div>
-  <!-- ⚠️ 네이버 지도 API 키 안내 -->
-  <div class="map-api-notice">
-    <span>⚠️</span>
-    <div>
-      <strong>API 키 설정 필요</strong><br>
-      아래 <code>YOUR_CLIENT_ID</code>를 본인의 네이버 클라우드 플랫폼 Client ID로 교체하세요.
-      발급: <a href="https://console.ncloud.com/naver-service/application" target="_blank" style="color:var(--accent)">console.ncloud.com</a>
-      → Maps → Web Dynamic Map → 애플리케이션 등록
-    </div>
-  </div>
-
-  <div class="map-container">
-    <div id="naver-map"></div>
-  </div>
-
-  <div class="map-legend">
-    <div class="legend-item"><div class="legend-dot" style="background:#C8733A"></div> A. 현대홈타운 2차 (1순위)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#4A7C59"></div> B. DMC파크뷰자이 (2순위)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#1C1C1E"></div> C. 마곡 단지 (검토중)</div>
-  </div>
-
-  <!-- COMPARISON CARDS -->
-  <div class="compare-grid">
-    <!-- Card A -->
-    <div class="compare-card winner">
-      <div class="winner-ribbon">⭐ 1순위 후보</div>
-      <div class="card-header">
-        <div style="display:flex;align-items:flex-start">
-          <div class="card-num accent-num">A</div>
-          <div>
-            <div class="card-name">현대홈타운 2차</div>
-            <div class="card-location">마포구 도화동 · 공덕역 5분</div>
-          </div>
-        </div>
-        <div class="card-price">
-          <div class="card-price-main">14.4억</div>
-          <div class="card-price-sub">KB시세 기준</div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="card-row"><span class="card-row-label">세대수</span><span class="card-row-value">914세대</span></div>
-        <div class="card-row"><span class="card-row-label">입주연도</span><span class="card-row-value">2000년</span></div>
-        <div class="card-row"><span class="card-row-label">전용면적</span><span class="card-row-value">84㎡</span></div>
-        <div class="card-row"><span class="card-row-label">지하철</span><span class="card-row-value">5·6·9호선</span></div>
-        <div class="card-row"><span class="card-row-label">학교</span><span class="card-row-value">단지 내 마포초</span></div>
-        <div class="card-row"><span class="card-row-label">실거래가</span><span class="card-row-value">16.1억 (10월)</span></div>
-      </div>
-      <div class="card-tags">
-        <span class="tag pro">✓ 교통 최강</span>
-        <span class="tag pro">✓ 초품아</span>
-        <span class="tag pro">✓ 조망 우수</span>
-        <span class="tag con">✗ 연식 오래됨</span>
-        <span class="tag con">✗ 실거래가 높음</span>
-      </div>
-      <div class="rating-section">
-        <div class="rating-row">
-          <span class="rating-label">재원</span>
-          <div class="stars" data-card="A" data-person="jw"></div>
-          <span class="rating-score" id="score-A-jw">-</span>
-        </div>
-        <div class="rating-row">
-          <span class="rating-label">희영</span>
-          <div class="stars" data-card="A" data-person="hy"></div>
-          <span class="rating-score" id="score-A-hy">-</span>
-        </div>
-        <hr class="avg-divider">
-        <div class="rating-row">
-          <span class="rating-label avg-label">평균</span>
-          <div class="stars avg-stars" id="avg-stars-A"></div>
-          <span class="rating-score avg-score" id="score-A-avg">-</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Card B -->
-    <div class="compare-card">
-      <div class="card-header">
-        <div style="display:flex;align-items:flex-start">
-          <div class="card-num">B</div>
-          <div>
-            <div class="card-name">DMC파크뷰자이</div>
-            <div class="card-location">서대문구 남가좌동 · 가좌역</div>
-          </div>
-        </div>
-        <div class="card-price">
-          <div class="card-price-main">14.2억</div>
-          <div class="card-price-sub">KB시세 기준</div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="card-row"><span class="card-row-label">세대수</span><span class="card-row-value">4,300세대</span></div>
-        <div class="card-row"><span class="card-row-label">입주연도</span><span class="card-row-value">2015년</span></div>
-        <div class="card-row"><span class="card-row-label">전용면적</span><span class="card-row-value">82㎡</span></div>
-        <div class="card-row"><span class="card-row-label">지하철</span><span class="card-row-value">경의중앙선</span></div>
-        <div class="card-row"><span class="card-row-label">학교</span><span class="card-row-value">단지 내 가재울초</span></div>
-        <div class="card-row"><span class="card-row-label">실거래가</span><span class="card-row-value">15억 (10월)</span></div>
-      </div>
-      <div class="card-tags">
-        <span class="tag pro">✓ 신축에 가까움</span>
-        <span class="tag pro">✓ 대단지</span>
-        <span class="tag pro">✓ 초품아</span>
-        <span class="tag con">✗ 전철 약함</span>
-        <span class="tag con">✗ 상권 아쉬움</span>
-      </div>
-      <div class="rating-section">
-        <div class="rating-row">
-          <span class="rating-label">재원</span>
-          <div class="stars" data-card="B" data-person="jw"></div>
-          <span class="rating-score" id="score-B-jw">-</span>
-        </div>
-        <div class="rating-row">
-          <span class="rating-label">희영</span>
-          <div class="stars" data-card="B" data-person="hy"></div>
-          <span class="rating-score" id="score-B-hy">-</span>
-        </div>
-        <hr class="avg-divider">
-        <div class="rating-row">
-          <span class="rating-label avg-label">평균</span>
-          <div class="stars avg-stars" id="avg-stars-B"></div>
-          <span class="rating-score avg-score" id="score-B-avg">-</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Card C -->
-    <div class="compare-card">
-      <div class="card-header">
-        <div style="display:flex;align-items:flex-start">
-          <div class="card-num">C</div>
-          <div>
-            <div class="card-name">마곡 단지 (검토중)</div>
-            <div class="card-location">강서구 마곡동 · 마곡나루역</div>
-          </div>
-        </div>
-        <div class="card-price">
-          <div class="card-price-main">14.6억</div>
-          <div class="card-price-sub">KB시세 기준</div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="card-row"><span class="card-row-label">세대수</span><span class="card-row-value">600세대+</span></div>
-        <div class="card-row"><span class="card-row-label">입주연도</span><span class="card-row-value">2017년</span></div>
-        <div class="card-row"><span class="card-row-label">전용면적</span><span class="card-row-value">84㎡</span></div>
-        <div class="card-row"><span class="card-row-label">지하철</span><span class="card-row-value">9호선·공항철도</span></div>
-        <div class="card-row"><span class="card-row-label">특이사항</span><span class="card-row-value">마곡업무지구</span></div>
-        <div class="card-row"><span class="card-row-label">실거래가</span><span class="card-row-value">16억 (10월)</span></div>
-      </div>
-      <div class="card-tags">
-        <span class="tag pro">✓ 신축 단지</span>
-        <span class="tag pro">✓ 업무지구 인접</span>
-        <span class="tag con">✗ 도심 접근성</span>
-        <span class="tag con">✗ 실거래가 높음</span>
-      </div>
-      <div class="rating-section">
-        <div class="rating-row">
-          <span class="rating-label">재원</span>
-          <div class="stars" data-card="C" data-person="jw"></div>
-          <span class="rating-score" id="score-C-jw">-</span>
-        </div>
-        <div class="rating-row">
-          <span class="rating-label">희영</span>
-          <div class="stars" data-card="C" data-person="hy"></div>
-          <span class="rating-score" id="score-C-hy">-</span>
-        </div>
-        <hr class="avg-divider">
-        <div class="rating-row">
-          <span class="rating-label avg-label">평균</span>
-          <div class="stars avg-stars" id="avg-stars-C"></div>
-          <span class="rating-score avg-score" id="score-C-avg">-</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="section-divider">
-
-<!-- SECTION 3: CHECKLIST -->
-<section id="checklist">
-  <div class="section-header">
-    <span class="section-num">03</span>
-    <h2 class="section-title">체크리스트 & 진행상황</h2>
-  </div>
-
-  <!-- Progress Summary -->
-  <div class="progress-summary">
-    <div class="progress-card">
-      <div class="progress-circle">
-        <svg width="64" height="64" viewBox="0 0 64 64">
-          <circle cx="32" cy="32" r="26" fill="none" stroke="#E2DDD8" stroke-width="4"/>
-          <circle cx="32" cy="32" r="26" fill="none" stroke="#4A7C59" stroke-width="4"
-            stroke-dasharray="163" stroke-dashoffset="49" stroke-linecap="round"/>
-        </svg>
-        <div class="progress-circle-text">70%</div>
-      </div>
-      <div class="progress-card-label">서류 준비</div>
-    </div>
-    <div class="progress-card">
-      <div class="progress-circle">
-        <svg width="64" height="64" viewBox="0 0 64 64">
-          <circle cx="32" cy="32" r="26" fill="none" stroke="#E2DDD8" stroke-width="4"/>
-          <circle cx="32" cy="32" r="26" fill="none" stroke="#C8733A" stroke-width="4"
-            stroke-dasharray="163" stroke-dashoffset="82" stroke-linecap="round"/>
-        </svg>
-        <div class="progress-circle-text">50%</div>
-      </div>
-      <div class="progress-card-label">임장 & 비교</div>
-    </div>
-    <div class="progress-card">
-      <div class="progress-circle">
-        <svg width="64" height="64" viewBox="0 0 64 64">
-          <circle cx="32" cy="32" r="26" fill="none" stroke="#E2DDD8" stroke-width="4"/>
-          <circle cx="32" cy="32" r="26" fill="none" stroke="#B8963E" stroke-width="4"
-            stroke-dasharray="163" stroke-dashoffset="130" stroke-linecap="round"/>
-        </svg>
-        <div class="progress-circle-text">20%</div>
-      </div>
-      <div class="progress-card-label">계약 & 자금</div>
-    </div>
-    <div class="progress-card">
-      <div class="progress-circle">
-        <svg width="64" height="64" viewBox="0 0 64 64">
-          <circle cx="32" cy="32" r="26" fill="none" stroke="#E2DDD8" stroke-width="4"/>
-          <circle cx="32" cy="32" r="26" fill="none" stroke="#E2DDD8" stroke-width="4"
-            stroke-dasharray="163" stroke-dashoffset="163" stroke-linecap="round"/>
-        </svg>
-        <div class="progress-circle-text">0%</div>
-      </div>
-      <div class="progress-card-label">이사 준비</div>
-    </div>
-  </div>
-
-  <!-- Checklist Groups -->
-  <div class="checklist-group">
-    <div class="checklist-group-title">📄 서류 & 자금 준비</div>
-    <div class="checklist-items">
-      <div class="check-item"><div class="check-box checked">✓</div><span class="check-text done">주택청약종합저축 확인</span></div>
-      <div class="check-item"><div class="check-box checked">✓</div><span class="check-text done">주택담보대출 한도 조회</span><span class="check-note">6억 확인</span></div>
-      <div class="check-item"><div class="check-box checked">✓</div><span class="check-text done">취득세·중개수수료 계산</span></div>
-      <div class="check-item"><div class="check-box partial">→</div><span class="check-text">법무사 상담 예약</span><span class="check-note">2월 예정</span></div>
-      <div class="check-item"><div class="check-box"></div><span class="check-text">자금 조달 계획서 작성</span></div>
-    </div>
-  </div>
-
-  <div class="checklist-group">
-    <div class="checklist-group-title">🏠 임장 & 단지 확인</div>
-    <div class="checklist-items">
-      <div class="check-item"><div class="check-box checked">✓</div><span class="check-text done">후보 단지 1차 리스트 작성 (8곳)</span></div>
-      <div class="check-item"><div class="check-box checked">✓</div><span class="check-text done">A·B·C 단지 직접 방문</span></div>
-      <div class="check-item"><div class="check-box checked">✓</div><span class="check-text done">주변 학교·상권·교통 확인</span></div>
-      <div class="check-item"><div class="check-box partial">→</div><span class="check-text">관리비·주차 현황 추가 확인</span><span class="check-note">진행중</span></div>
-      <div class="check-item"><div class="check-box"></div><span class="check-text">최종 후보 재방문 (2회차 임장)</span></div>
-    </div>
-  </div>
-
-  <div class="checklist-group">
-    <div class="checklist-group-title">✍️ 계약 & 이사</div>
-    <div class="checklist-items">
-      <div class="check-item"><div class="check-box partial">→</div><span class="check-text">매도인 협상 진행</span><span class="check-note">진행중</span></div>
-      <div class="check-item"><div class="check-box"></div><span class="check-text">계약서 검토 (법무사)</span></div>
-      <div class="check-item"><div class="check-box"></div><span class="check-text">계약금 납입</span></div>
-      <div class="check-item"><div class="check-box"></div><span class="check-text">이사업체 3곳 견적 비교</span></div>
-      <div class="check-item"><div class="check-box"></div><span class="check-text">인테리어 계획 수립</span></div>
-    </div>
-  </div>
-</section>
-
-<hr class="section-divider">
-
-<!-- SECTION 4: FINAL REVEAL -->
-<div class="reveal-section" id="reveal">
-  <div class="reveal-eyebrow">04 · FINAL DECISION</div>
-  <h2 class="reveal-title">우리의 최종<br>선택은...</h2>
-
-  <!-- PENDING STATE - replace with reveal card when decision is made -->
-  <div class="reveal-pending">
-    <div class="reveal-pending-icon">🔒</div>
-    <p style="font-weight:500;margin-bottom:8px">아직 결정 중이에요!</p>
-    <p style="font-size:13px">계약이 완료되면 이 자리에 최종 결과를 공개할게요 😊</p>
-  </div>
-
-  <!--
-  ✅ 결정 후 아래 코드로 교체하세요:
-
-  <div class="reveal-card">
-    <div class="reveal-apt-name">현대홈타운 2차</div>
-    <div class="reveal-apt-sub">서울 마포구 도화동 · 공덕역 5분 · 914세대</div>
-    <div class="reveal-stats">
-      <div class="reveal-stat">
-        <div class="reveal-stat-value">14.4억</div>
-        <div class="reveal-stat-label">KB시세</div>
-      </div>
-      <div class="reveal-stat">
-        <div class="reveal-stat-value">84㎡</div>
-        <div class="reveal-stat-label">전용면적</div>
-      </div>
-      <div class="reveal-stat">
-        <div class="reveal-stat-value">2000</div>
-        <div class="reveal-stat-label">입주연도</div>
-      </div>
-    </div>
-    <p class="reveal-message">
-      긴 고민 끝에 공덕역 역세권과 단지 내 초등학교가 있는 이곳으로 결정했어요.
-      많이 응원해주세요! 💍
-    </p>
-  </div>
-  -->
+  <p class="data-note">※ 가격·학군·인프라 데이터는 KB부동산·호갱노노·나이스지키미 기준 (2025~2026년). 학업성취도는 나이스 학업성취도 공시 기준(보통학력이상 비율). 시세·데이터 수시 변동 — 직접 확인 권장.</p>
+  <div class="cards" id="cards"></div>
 </div>
-
-<!-- STICKY NAV -->
-<nav class="sticky-nav">
-  <button class="nav-btn" onclick="document.getElementById('journey').scrollIntoView({behavior:'smooth'})">여정</button>
-  <button class="nav-btn" onclick="document.getElementById('map').scrollIntoView({behavior:'smooth'})">지도 & 비교</button>
-  <button class="nav-btn" onclick="document.getElementById('checklist').scrollIntoView({behavior:'smooth'})">체크리스트</button>
-  <button class="nav-btn" onclick="document.getElementById('reveal').scrollIntoView({behavior:'smooth'})">최종 결정</button>
-</nav>
-
-<!-- ✅ 네이버 지도 API: YOUR_CLIENT_ID를 발급받은 키로 교체하세요 -->
-<script type="text/javascript"
-  src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=x677ugzzwe&language=ko">
-</script>
 
 <script>
-  // ── 네이버 지도 초기화 ──────────────────────────────────────────
-  function initNaverMap() {
-    if (typeof naver === 'undefined') {
-      document.getElementById('naver-map').innerHTML =
-        '<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#F0EBE4;color:#6B6560;font-size:13px;gap:8px">' +
-        '<span style="font-size:32px">🗺️</span>' +
-        '<strong>네이버 지도를 불러오지 못했습니다</strong>' +
-        '<span>CLIENT_ID를 확인하고 새로고침해주세요</span>' +
-        '</div>';
-      return;
+// ═══════════════════════════════════════════════════════
+// 단지 데이터
+// ═══════════════════════════════════════════════════════
+const APTS = [
+  {
+    id:'A', name:'목동센트럴아이파크위브', gu:'양천구', year:2020, units:3045,
+    lat:37.5267, lng:126.8651,
+    kbUrl:'https://kbland.kr/se/c/37625',
+    station:'신정네거리역 (2호선) 도보 14분',
+    school:{name:'서울신남초', achievement:'중상', note:'단지 내 위치·초품아'},
+    p59:{r:'10.5억', l:'10.3억'}, p84:{r:'13.2억', l:'12.9억'},
+    cm:{
+      work:[
+        {dest:'여의도',    am:{tr:'30분',ca:'20분'}, pm:{tr:'38분',ca:'27분'}},
+        {dest:'광화문',    am:{tr:'42분',ca:'30분'}, pm:{tr:'50분',ca:'37분'}},
+        {dest:'강남역',    am:{tr:'45분',ca:'30분'}, pm:{tr:'52분',ca:'38분'}},
+        {dest:'삼성역',    am:{tr:'50분',ca:'33분'}, pm:{tr:'58분',ca:'41분'}},
+        {dest:'양재역',    am:{tr:'52분',ca:'35분'}, pm:{tr:'60분',ca:'43분'}},
+        {dest:'판교',      am:{tr:'70분',ca:'45분'}, pm:{tr:'78분',ca:'53분'}},
+      ],
+      hub:[
+        {dest:'서울역',    am:{tr:'35분',ca:'22분'}, pm:{tr:'42분',ca:'28분'}},
+        {dest:'수서역',    am:{tr:'55분',ca:'38분'}, pm:{tr:'63분',ca:'46분'}},
+        {dest:'인천공항',  am:{tr:'55분',ca:'38분'}, pm:{tr:'63분',ca:'46분'}},
+        {dest:'김포공항',  am:{tr:'22분',ca:'15분'}, pm:{tr:'30분',ca:'20분'}},
+        {dest:'경부고속',  am:{tr:'-',   ca:'22분'}, pm:{tr:'-',   ca:'28분'}},
+      ]
+    },
+    infra:{
+      mart:{name:'이마트 목동점', dist:'1.8km', car:'7분'},
+      dept:{name:'현대백화점 목동점', dist:'2.5km', car:'10분'},
+      hosp:{name:'이대목동병원', dist:'3.2km', car:'12분'},
     }
-
-    // 후보 단지 좌표 & 정보
-    const candidates = [
-      {
-        name: 'A. 현대홈타운 2차',
-        address: '마포구 도화동 · 공덕역 5분',
-        price: '14.4억',
-        rank: '1순위',
-        color: '#C8733A',
-        lat: 37.5447,
-        lng: 126.9536,
-      },
-      {
-        name: 'B. DMC파크뷰자이',
-        address: '서대문구 남가좌동 · 가좌역',
-        price: '14.2억',
-        rank: '2순위',
-        color: '#4A7C59',
-        lat: 37.5698,
-        lng: 126.9149,
-      },
-      {
-        name: 'C. 마곡 단지',
-        address: '강서구 마곡동 · 마곡나루역',
-        price: '14.6억',
-        rank: '검토중',
-        color: '#1C1C1E',
-        lat: 37.5577,
-        lng: 126.8305,
-      },
-    ];
-
-    // 세 단지의 중심 좌표
-    const centerLat = candidates.reduce((s, c) => s + c.lat, 0) / candidates.length;
-    const centerLng = candidates.reduce((s, c) => s + c.lng, 0) / candidates.length;
-
-    const map = new naver.maps.Map('naver-map', {
-      center: new naver.maps.LatLng(centerLat, centerLng),
-      zoom: 12,
-      mapTypeControl: false,
-      scaleControl: true,
-      logoControl: true,
-      mapDataControl: false,
-    });
-
-    const infoWindows = [];
-
-    candidates.forEach((apt, i) => {
-      // 커스텀 마커 HTML
-      const markerHtml = `
-        <div style="
-          background:${apt.color};
-          color:white;
-          padding:7px 13px;
-          border-radius:20px;
-          font-size:12px;
-          font-weight:500;
-          font-family:'Noto Sans KR',sans-serif;
-          white-space:nowrap;
-          box-shadow:0 3px 10px rgba(0,0,0,0.25);
-          cursor:pointer;
-          position:relative;
-        ">
-          ${apt.name}
-          <div style="
-            position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);
-            border:7px solid transparent;border-top-color:${apt.color};border-bottom:none;
-          "></div>
-        </div>`;
-
-      const marker = new naver.maps.Marker({
-        position: new naver.maps.LatLng(apt.lat, apt.lng),
-        map: map,
-        icon: {
-          content: markerHtml,
-          anchor: new naver.maps.Point(60, 38),
-        },
-      });
-
-      // 인포윈도우
-      const iw = new naver.maps.InfoWindow({
-        content: `
-          <div style="
-            padding:16px 18px;
-            font-family:'Noto Sans KR',sans-serif;
-            min-width:200px;
-            border-radius:10px;
-          ">
-            <div style="font-size:11px;color:${apt.color};letter-spacing:1px;margin-bottom:4px;font-weight:500">${apt.rank}</div>
-            <div style="font-size:15px;font-weight:700;margin-bottom:2px">${apt.name}</div>
-            <div style="font-size:12px;color:#888;margin-bottom:10px">${apt.address}</div>
-            <div style="
-              background:#F9F6F0;border-radius:8px;padding:10px 14px;
-              font-size:13px;display:flex;justify-content:space-between;align-items:center;
-            ">
-              <span style="color:#888">KB시세</span>
-              <span style="font-weight:700;color:${apt.color};font-size:16px">${apt.price}</span>
-            </div>
-          </div>`,
-        borderWidth: 0,
-        backgroundColor: 'white',
-        borderRadius: '12px',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
-        pixelOffset: new naver.maps.Point(0, -12),
-        disableAnchor: true,
-      });
-
-      infoWindows.push(iw);
-
-      naver.maps.Event.addListener(marker, 'click', () => {
-        infoWindows.forEach((w, j) => { if (j !== i) w.close(); });
-        iw.getMap() ? iw.close() : iw.open(map, marker);
-      });
-    });
-  }
-
-  // API 로드 후 실행
-  window.addEventListener('load', initNaverMap);
-
-  // ── 별점 시스템 ───────────────────────────────────────────────
-  const ratings = { A: { jw: 0, hy: 0 }, B: { jw: 0, hy: 0 }, C: { jw: 0, hy: 0 } };
-
-  // SVG 별 생성 (empty / half / full)
-  function starSVG(type) {
-    const gold = '#F5A623';
-    const empty = '#E2DDD8';
-    if (type === 'full') {
-      return `<svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${gold}" stroke="${gold}" stroke-width="1"/></svg>`;
-    } else if (type === 'half') {
-      return `<svg viewBox="0 0 24 24">
-        <defs><clipPath id="half"><rect x="0" y="0" width="12" height="24"/></clipPath></defs>
-        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${empty}" stroke="${empty}" stroke-width="1"/>
-        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${gold}" stroke="${gold}" stroke-width="1" clip-path="url(#half)"/>
-      </svg>`;
-    } else {
-      return `<svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="${empty}" stroke="${empty}" stroke-width="1"/></svg>`;
+  },
+  {
+    id:'B', name:'DMC래미안e편한세상', gu:'서대문구', year:2012, units:3293,
+    lat:37.5709, lng:126.9089,
+    kbUrl:'https://kbland.kr/se/c/44510',
+    station:'가좌역 (경의중앙선) 도보 5분',
+    school:{name:'북가좌초', achievement:'중상', note:'도보 10분'},
+    p59:{r:'11.0억', l:'10.7억'}, p84:{r:'13.1억', l:'12.8억'},
+    cm:{
+      work:[
+        {dest:'여의도',    am:{tr:'52분',ca:'28분'}, pm:{tr:'60분',ca:'35분'}},
+        {dest:'광화문',    am:{tr:'38분',ca:'25분'}, pm:{tr:'46분',ca:'32분'}},
+        {dest:'강남역',    am:{tr:'55분',ca:'38분'}, pm:{tr:'63분',ca:'46분'}},
+        {dest:'삼성역',    am:{tr:'60분',ca:'42분'}, pm:{tr:'68분',ca:'50분'}},
+        {dest:'양재역',    am:{tr:'62분',ca:'44분'}, pm:{tr:'70분',ca:'52분'}},
+        {dest:'판교',      am:{tr:'80분',ca:'55분'}, pm:{tr:'88분',ca:'63분'}},
+      ],
+      hub:[
+        {dest:'서울역',    am:{tr:'28분',ca:'18분'}, pm:{tr:'35분',ca:'22분'}},
+        {dest:'수서역',    am:{tr:'65분',ca:'45분'}, pm:{tr:'73분',ca:'53분'}},
+        {dest:'인천공항',  am:{tr:'50분',ca:'35분'}, pm:{tr:'58분',ca:'42분'}},
+        {dest:'김포공항',  am:{tr:'35분',ca:'22분'}, pm:{tr:'43분',ca:'28분'}},
+        {dest:'경부고속',  am:{tr:'-',   ca:'32분'}, pm:{tr:'-',   ca:'38분'}},
+      ]
+    },
+    infra:{
+      mart:{name:'홈플러스 월드컵점', dist:'3.0km', car:'10분'},
+      dept:{name:'NC백화점 불광점', dist:'4.5km', car:'15분'},
+      hosp:{name:'신촌세브란스병원', dist:'4.5km', car:'14분'},
     }
-  }
-
-  // 별 5개 렌더링
-  function renderStars(container, value, interactive) {
-    container.innerHTML = '';
-    for (let i = 1; i <= 5; i++) {
-      const wrap = document.createElement('div');
-      wrap.className = 'star-wrap';
-
-      let type = 'empty';
-      if (value >= i) type = 'full';
-      else if (value >= i - 0.5) type = 'half';
-      wrap.innerHTML = starSVG(type);
-
-      if (interactive) {
-        // 왼쪽 클릭 = 반점, 오른쪽 클릭 = 한 개
-        const halfZone = document.createElement('div');
-        halfZone.className = 'star-half-zone';
-        halfZone.addEventListener('click', () => {
-          const card = container.dataset.card;
-          const person = container.dataset.person;
-          const newVal = i - 0.5;
-          ratings[card][person] = (ratings[card][person] === newVal) ? 0 : newVal;
-          updateRatings(card);
-        });
-
-        const fullZone = document.createElement('div');
-        fullZone.className = 'star-full-zone';
-        fullZone.addEventListener('click', () => {
-          const card = container.dataset.card;
-          const person = container.dataset.person;
-          const newVal = i;
-          ratings[card][person] = (ratings[card][person] === newVal) ? 0 : newVal;
-          updateRatings(card);
-        });
-
-        // hover preview
-        halfZone.addEventListener('mouseenter', () => renderStars(container, i - 0.5, false));
-        fullZone.addEventListener('mouseenter', () => renderStars(container, i, false));
-        wrap.addEventListener('mouseleave', () => {
-          const card = container.dataset.card;
-          const person = container.dataset.person;
-          renderStars(container, ratings[card][person], false);
-          // re-attach interactivity after re-render
-        });
-
-        wrap.appendChild(halfZone);
-        wrap.appendChild(fullZone);
-      }
-
-      container.appendChild(wrap);
+  },
+  {
+    id:'C', name:'마곡수명산파크3단지', gu:'강서구', year:2009, units:846,
+    lat:37.5539, lng:126.8400,
+    kbUrl:'https://kbland.kr/se/c/15208',
+    station:'발산역 (5호선) 도보 12분',
+    school:{name:'내발산초', achievement:'중', note:'도보 8분·초품아'},
+    p59:{r:'8.5억', l:'8.2억'}, p84:{r:'11.0억', l:'10.7억'},
+    cm:{
+      work:[
+        {dest:'여의도',    am:{tr:'20분',ca:'12분'}, pm:{tr:'28분',ca:'17분'}},
+        {dest:'광화문',    am:{tr:'45분',ca:'28분'}, pm:{tr:'53분',ca:'35분'}},
+        {dest:'강남역',    am:{tr:'55분',ca:'35분'}, pm:{tr:'63분',ca:'42분'}},
+        {dest:'삼성역',    am:{tr:'58분',ca:'38분'}, pm:{tr:'66분',ca:'46분'}},
+        {dest:'양재역',    am:{tr:'60분',ca:'40분'}, pm:{tr:'68분',ca:'48분'}},
+        {dest:'판교',      am:{tr:'75분',ca:'50분'}, pm:{tr:'83분',ca:'58분'}},
+      ],
+      hub:[
+        {dest:'서울역',    am:{tr:'38분',ca:'22분'}, pm:{tr:'46분',ca:'28분'}},
+        {dest:'수서역',    am:{tr:'60분',ca:'42분'}, pm:{tr:'68분',ca:'50분'}},
+        {dest:'인천공항',  am:{tr:'35분',ca:'22분'}, pm:{tr:'43분',ca:'28분'}},
+        {dest:'김포공항',  am:{tr:'15분',ca:'10분'}, pm:{tr:'23분',ca:'15분'}},
+        {dest:'경부고속',  am:{tr:'-',   ca:'28분'}, pm:{tr:'-',   ca:'35분'}},
+      ]
+    },
+    infra:{
+      mart:{name:'이마트 강서점', dist:'2.0km', car:'7분'},
+      dept:{name:'롯데백화점 김포공항점', dist:'4.0km', car:'13분'},
+      hosp:{name:'이화의료원 강서점', dist:'3.5km', car:'12분'},
     }
+  },
+  {
+    id:'D', name:'창전삼성래미안', gu:'마포구', year:2002, units:553,
+    lat:37.5519, lng:126.9228,
+    kbUrl:'https://kbland.kr/se/c/1383',
+    station:'홍대입구역 (2호선·공항철도) 도보 10분',
+    school:{name:'서울창전초', achievement:'중상', note:'도보 5분'},
+    p59:{r:'11.5억', l:'11.0억'}, p84:{r:'13.3억', l:'12.9억'},
+    cm:{
+      work:[
+        {dest:'여의도',    am:{tr:'48분',ca:'30분'}, pm:{tr:'56분',ca:'38분'}},
+        {dest:'광화문',    am:{tr:'32분',ca:'20분'}, pm:{tr:'40분',ca:'27분'}},
+        {dest:'강남역',    am:{tr:'50분',ca:'32분'}, pm:{tr:'58분',ca:'40분'}},
+        {dest:'삼성역',    am:{tr:'55분',ca:'36분'}, pm:{tr:'63분',ca:'44분'}},
+        {dest:'양재역',    am:{tr:'57분',ca:'38분'}, pm:{tr:'65분',ca:'46분'}},
+        {dest:'판교',      am:{tr:'75분',ca:'50분'}, pm:{tr:'83분',ca:'58분'}},
+      ],
+      hub:[
+        {dest:'서울역',    am:{tr:'20분',ca:'13분'}, pm:{tr:'27분',ca:'18분'}},
+        {dest:'수서역',    am:{tr:'62분',ca:'43분'}, pm:{tr:'70분',ca:'51분'}},
+        {dest:'인천공항',  am:{tr:'40분',ca:'30분'}, pm:{tr:'48분',ca:'37분'}},
+        {dest:'김포공항',  am:{tr:'30분',ca:'20분'}, pm:{tr:'38분',ca:'27분'}},
+        {dest:'경부고속',  am:{tr:'-',   ca:'27분'}, pm:{tr:'-',   ca:'33분'}},
+      ]
+    },
+    infra:{
+      mart:{name:'홈플러스 합정점', dist:'1.2km', car:'5분'},
+      dept:{name:'현대백화점 신촌점', dist:'1.8km', car:'6분'},
+      hosp:{name:'신촌세브란스병원', dist:'2.5km', car:'8분'},
+    }
+  },
+  {
+    id:'E', name:'상도하이츠빌', gu:'동작구', year:2003, units:888,
+    lat:37.5014, lng:126.9389,
+    kbUrl:'https://kbland.kr/se/c/5678',
+    station:'장승배기역 (7호선) 도보 5분',
+    school:{name:'서울상도초', achievement:'중', note:'도보 8분'},
+    p59:{r:'9.8억', l:'9.5억'}, p84:{r:'13.5억', l:'13.1억'},
+    cm:{
+      work:[
+        {dest:'여의도',    am:{tr:'55분',ca:'35분'}, pm:{tr:'63분',ca:'43분'}},
+        {dest:'광화문',    am:{tr:'48분',ca:'32분'}, pm:{tr:'56분',ca:'40분'}},
+        {dest:'강남역',    am:{tr:'35분',ca:'22분'}, pm:{tr:'43분',ca:'29분'}},
+        {dest:'삼성역',    am:{tr:'38분',ca:'25분'}, pm:{tr:'46분',ca:'32분'}},
+        {dest:'양재역',    am:{tr:'35분',ca:'22분'}, pm:{tr:'43분',ca:'29분'}},
+        {dest:'판교',      am:{tr:'55분',ca:'38분'}, pm:{tr:'63분',ca:'46분'}},
+      ],
+      hub:[
+        {dest:'서울역',    am:{tr:'30분',ca:'18분'}, pm:{tr:'38분',ca:'24분'}},
+        {dest:'수서역',    am:{tr:'42분',ca:'28분'}, pm:{tr:'50분',ca:'35분'}},
+        {dest:'인천공항',  am:{tr:'70분',ca:'50분'}, pm:{tr:'78분',ca:'58분'}},
+        {dest:'김포공항',  am:{tr:'50분',ca:'32분'}, pm:{tr:'58분',ca:'40분'}},
+        {dest:'경부고속',  am:{tr:'-',   ca:'20분'}, pm:{tr:'-',   ca:'26분'}},
+      ]
+    },
+    infra:{
+      mart:{name:'이마트 동작점', dist:'2.5km', car:'9분'},
+      dept:{name:'롯데백화점 영등포점', dist:'5.0km', car:'18분'},
+      hosp:{name:'중앙대학교병원', dist:'3.0km', car:'10분'},
+    }
+  },
+  {
+    id:'F', name:'신당삼성', gu:'중구', year:1999, units:664,
+    lat:37.5649, lng:127.0196,
+    kbUrl:'https://kbland.kr/se/c/420',
+    station:'신당역 (2·6호선) 도보 5분',
+    school:{name:'서울약수초', achievement:'중상', note:'도보 7분'},
+    p59:{r:'10.5억', l:'10.0억'}, p84:{r:'13.8억', l:'13.4억'},
+    cm:{
+      work:[
+        {dest:'여의도',    am:{tr:'50분',ca:'30분'}, pm:{tr:'58분',ca:'37분'}},
+        {dest:'광화문',    am:{tr:'25분',ca:'15분'}, pm:{tr:'33분',ca:'22분'}},
+        {dest:'강남역',    am:{tr:'30분',ca:'22분'}, pm:{tr:'38분',ca:'28분'}},
+        {dest:'삼성역',    am:{tr:'28분',ca:'20분'}, pm:{tr:'36분',ca:'27분'}},
+        {dest:'양재역',    am:{tr:'35분',ca:'25분'}, pm:{tr:'43분',ca:'32분'}},
+        {dest:'판교',      am:{tr:'55분',ca:'40분'}, pm:{tr:'63분',ca:'48분'}},
+      ],
+      hub:[
+        {dest:'서울역',    am:{tr:'18분',ca:'12분'}, pm:{tr:'24분',ca:'16분'}},
+        {dest:'수서역',    am:{tr:'40분',ca:'28분'}, pm:{tr:'48분',ca:'35분'}},
+        {dest:'인천공항',  am:{tr:'65분',ca:'45분'}, pm:{tr:'73분',ca:'53분'}},
+        {dest:'김포공항',  am:{tr:'55분',ca:'38분'}, pm:{tr:'63분',ca:'46분'}},
+        {dest:'경부고속',  am:{tr:'-',   ca:'22분'}, pm:{tr:'-',   ca:'28분'}},
+      ]
+    },
+    infra:{
+      mart:{name:'이마트 성수점', dist:'3.5km', car:'12분'},
+      dept:{name:'롯데백화점 본점', dist:'2.5km', car:'8분'},
+      hosp:{name:'국립중앙의료원', dist:'1.5km', car:'5분'},
+    }
+  },
+  {
+    id:'G', name:'동아약수하이츠', gu:'중구', year:1996, units:598,
+    lat:37.5577, lng:127.0161,
+    kbUrl:'https://kbland.kr/se/c/1001',
+    station:'약수역 (3·6호선) 도보 5분',
+    school:{name:'서울약수초', achievement:'중상', note:'도보 10분'},
+    p59:{r:'11.0억', l:'10.5억'}, p84:{r:'14.5억', l:'14.0억'},
+    cm:{
+      work:[
+        {dest:'여의도',    am:{tr:'52분',ca:'32분'}, pm:{tr:'60분',ca:'39분'}},
+        {dest:'광화문',    am:{tr:'28분',ca:'18분'}, pm:{tr:'36분',ca:'25분'}},
+        {dest:'강남역',    am:{tr:'28분',ca:'20분'}, pm:{tr:'36분',ca:'27분'}},
+        {dest:'삼성역',    am:{tr:'26분',ca:'18분'}, pm:{tr:'34분',ca:'25분'}},
+        {dest:'양재역',    am:{tr:'32분',ca:'23분'}, pm:{tr:'40분',ca:'30분'}},
+        {dest:'판교',      am:{tr:'52분',ca:'38분'}, pm:{tr:'60분',ca:'46분'}},
+      ],
+      hub:[
+        {dest:'서울역',    am:{tr:'20분',ca:'13분'}, pm:{tr:'27분',ca:'18분'}},
+        {dest:'수서역',    am:{tr:'35분',ca:'25분'}, pm:{tr:'43분',ca:'32분'}},
+        {dest:'인천공항',  am:{tr:'68분',ca:'48분'}, pm:{tr:'76분',ca:'56분'}},
+        {dest:'김포공항',  am:{tr:'58분',ca:'40분'}, pm:{tr:'66분',ca:'48분'}},
+        {dest:'경부고속',  am:{tr:'-',   ca:'20분'}, pm:{tr:'-',   ca:'26분'}},
+      ]
+    },
+    infra:{
+      mart:{name:'이마트 성수점', dist:'4.0km', car:'13분'},
+      dept:{name:'롯데백화점 본점', dist:'2.8km', car:'9분'},
+      hosp:{name:'국립중앙의료원', dist:'2.0km', car:'7분'},
+    }
+  },
+  {
+    id:'H', name:'염리동상록', gu:'마포구', year:1999, units:690,
+    lat:37.5497, lng:126.9572,
+    kbUrl:'https://kbland.kr/se/c/1380',
+    station:'애오개역 (5호선) 도보 5분',
+    school:{name:'서울염리초', achievement:'중상', note:'도보 7분'},
+    p59:{r:'10.8억', l:'10.5억'}, p84:{r:'13.5억', l:'13.0억'},
+    cm:{
+      work:[
+        {dest:'여의도',    am:{tr:'42분',ca:'27분'}, pm:{tr:'50분',ca:'33분'}},
+        {dest:'광화문',    am:{tr:'25분',ca:'17분'}, pm:{tr:'33분',ca:'23분'}},
+        {dest:'강남역',    am:{tr:'40분',ca:'27분'}, pm:{tr:'48분',ca:'34분'}},
+        {dest:'삼성역',    am:{tr:'45분',ca:'30분'}, pm:{tr:'53분',ca:'38분'}},
+        {dest:'양재역',    am:{tr:'47분',ca:'32분'}, pm:{tr:'55분',ca:'40분'}},
+        {dest:'판교',      am:{tr:'65분',ca:'45분'}, pm:{tr:'73분',ca:'53분'}},
+      ],
+      hub:[
+        {dest:'서울역',    am:{tr:'15분',ca:'10분'}, pm:{tr:'22분',ca:'14분'}},
+        {dest:'수서역',    am:{tr:'55분',ca:'38분'}, pm:{tr:'63분',ca:'46분'}},
+        {dest:'인천공항',  am:{tr:'55분',ca:'40분'}, pm:{tr:'63분',ca:'48분'}},
+        {dest:'김포공항',  am:{tr:'42분',ca:'28분'}, pm:{tr:'50분',ca:'35분'}},
+        {dest:'경부고속',  am:{tr:'-',   ca:'22분'}, pm:{tr:'-',   ca:'28분'}},
+      ]
+    },
+    infra:{
+      mart:{name:'이마트 공덕점', dist:'1.5km', car:'5분'},
+      dept:{name:'AK플라자 홍대점', dist:'2.5km', car:'8분'},
+      hosp:{name:'서울성모병원', dist:'5.0km', car:'16분'},
+    }
+  },
+  {
+    id:'I', name:'래미안에스티움', gu:'영등포구', year:2017, units:1722,
+    lat:37.5082, lng:126.9198,
+    kbUrl:'https://kbland.kr/se/c/30180',
+    station:'신풍역 (7호선) 도보 7분',
+    school:{name:'대방초', achievement:'중', note:'도보 10분'},
+    p59:{r:'12.0억', l:'11.7억'}, p84:{r:'16.5억', l:'16.0억'},
+    cm:{
+      work:[
+        {dest:'여의도',    am:{tr:'38분',ca:'22분'}, pm:{tr:'46분',ca:'29분'}},
+        {dest:'광화문',    am:{tr:'45분',ca:'28분'}, pm:{tr:'53분',ca:'35분'}},
+        {dest:'강남역',    am:{tr:'35분',ca:'22분'}, pm:{tr:'43분',ca:'29분'}},
+        {dest:'삼성역',    am:{tr:'38분',ca:'25분'}, pm:{tr:'46분',ca:'32분'}},
+        {dest:'양재역',    am:{tr:'35분',ca:'22분'}, pm:{tr:'43분',ca:'29분'}},
+        {dest:'판교',      am:{tr:'55분',ca:'38분'}, pm:{tr:'63분',ca:'46분'}},
+      ],
+      hub:[
+        {dest:'서울역',    am:{tr:'28분',ca:'17분'}, pm:{tr:'35분',ca:'22분'}},
+        {dest:'수서역',    am:{tr:'40분',ca:'27분'}, pm:{tr:'48분',ca:'34분'}},
+        {dest:'인천공항',  am:{tr:'65분',ca:'47분'}, pm:{tr:'73분',ca:'55분'}},
+        {dest:'김포공항',  am:{tr:'48분',ca:'30분'}, pm:{tr:'56분',ca:'37분'}},
+        {dest:'경부고속',  am:{tr:'-',   ca:'18분'}, pm:{tr:'-',   ca:'24분'}},
+      ]
+    },
+    infra:{
+      mart:{name:'홈플러스 영등포점', dist:'2.5km', car:'9분'},
+      dept:{name:'롯데백화점 영등포점', dist:'3.5km', car:'12분'},
+      hosp:{name:'보라매병원', dist:'1.5km', car:'5분'},
+    }
+  },
+  {
+    id:'J', name:'현대리버빌1지구', gu:'마포구', year:2000, units:712,
+    lat:37.5499, lng:126.9129,
+    kbUrl:'https://kbland.kr/se/c/1391',
+    station:'합정역 (2·6호선) 도보 5분',
+    school:{name:'서울합정초', achievement:'중상', note:'도보 8분'},
+    p59:{r:'12.5억', l:'12.0억'}, p84:{r:'15.5억', l:'15.0억'},
+    cm:{
+      work:[
+        {dest:'여의도',    am:{tr:'40분',ca:'25분'}, pm:{tr:'48분',ca:'32분'}},
+        {dest:'광화문',    am:{tr:'30분',ca:'20분'}, pm:{tr:'38분',ca:'27분'}},
+        {dest:'강남역',    am:{tr:'45분',ca:'28분'}, pm:{tr:'53분',ca:'35분'}},
+        {dest:'삼성역',    am:{tr:'50분',ca:'32분'}, pm:{tr:'58분',ca:'40분'}},
+        {dest:'양재역',    am:{tr:'52분',ca:'34분'}, pm:{tr:'60분',ca:'42분'}},
+        {dest:'판교',      am:{tr:'70분',ca:'47분'}, pm:{tr:'78분',ca:'55분'}},
+      ],
+      hub:[
+        {dest:'서울역',    am:{tr:'22분',ca:'14분'}, pm:{tr:'29분',ca:'18분'}},
+        {dest:'수서역',    am:{tr:'60분',ca:'42분'}, pm:{tr:'68분',ca:'50분'}},
+        {dest:'인천공항',  am:{tr:'48분',ca:'33분'}, pm:{tr:'56분',ca:'40분'}},
+        {dest:'김포공항',  am:{tr:'35분',ca:'22분'}, pm:{tr:'43분',ca:'28분'}},
+        {dest:'경부고속',  am:{tr:'-',   ca:'25분'}, pm:{tr:'-',   ca:'32분'}},
+      ]
+    },
+    infra:{
+      mart:{name:'홈플러스 합정점', dist:'0.8km', car:'3분'},
+      dept:{name:'현대백화점 신촌점', dist:'2.2km', car:'7분'},
+      hosp:{name:'신촌세브란스병원', dist:'3.0km', car:'10분'},
+    }
+  },
+  {
+    id:'K', name:'한강극동', gu:'마포구', year:1995, units:549,
+    lat:37.5479, lng:126.9098,
+    kbUrl:'https://kbland.kr/se/c/1392',
+    station:'합정역 (2·6호선) 도보 8분',
+    school:{name:'서울합정초', achievement:'중상', note:'도보 12분'},
+    p59:{r:'11.5억', l:'11.0억'}, p84:{r:'14.5억', l:'14.0억'},
+    cm:{
+      work:[
+        {dest:'여의도',    am:{tr:'42분',ca:'26분'}, pm:{tr:'50분',ca:'33분'}},
+        {dest:'광화문',    am:{tr:'32분',ca:'22분'}, pm:{tr:'40분',ca:'29분'}},
+        {dest:'강남역',    am:{tr:'47분',ca:'30분'}, pm:{tr:'55분',ca:'37분'}},
+        {dest:'삼성역',    am:{tr:'52분',ca:'34분'}, pm:{tr:'60분',ca:'42분'}},
+        {dest:'양재역',    am:{tr:'54분',ca:'36분'}, pm:{tr:'62분',ca:'44분'}},
+        {dest:'판교',      am:{tr:'72분',ca:'49분'}, pm:{tr:'80분',ca:'57분'}},
+      ],
+      hub:[
+        {dest:'서울역',    am:{tr:'24분',ca:'15분'}, pm:{tr:'31분',ca:'20분'}},
+        {dest:'수서역',    am:{tr:'62분',ca:'44분'}, pm:{tr:'70분',ca:'52분'}},
+        {dest:'인천공항',  am:{tr:'50분',ca:'35분'}, pm:{tr:'58분',ca:'42분'}},
+        {dest:'김포공항',  am:{tr:'37분',ca:'24분'}, pm:{tr:'45분',ca:'30분'}},
+        {dest:'경부고속',  am:{tr:'-',   ca:'27분'}, pm:{tr:'-',   ca:'34분'}},
+      ]
+    },
+    infra:{
+      mart:{name:'홈플러스 합정점', dist:'1.2km', car:'4분'},
+      dept:{name:'현대백화점 신촌점', dist:'2.5km', car:'8분'},
+      hosp:{name:'신촌세브란스병원', dist:'3.3km', car:'11분'},
+    }
+  },
+  {
+    id:'L', name:'독립문극동아파트', gu:'서대문구', year:1994, units:804,
+    lat:37.5757, lng:126.9641,
+    kbUrl:'https://kbland.kr/se/c/1401',
+    station:'독립문역 (3호선) 도보 3분',
+    school:{name:'서울금화초', achievement:'중', note:'도보 8분'},
+    p59:{r:'9.5억', l:'9.2억'}, p84:{r:'13.0억', l:'12.6억'},
+    cm:{
+      work:[
+        {dest:'여의도',    am:{tr:'55분',ca:'33분'}, pm:{tr:'63분',ca:'40분'}},
+        {dest:'광화문',    am:{tr:'22분',ca:'15분'}, pm:{tr:'30분',ca:'21분'}},
+        {dest:'강남역',    am:{tr:'50분',ca:'32분'}, pm:{tr:'58분',ca:'39분'}},
+        {dest:'삼성역',    am:{tr:'55분',ca:'35분'}, pm:{tr:'63분',ca:'43분'}},
+        {dest:'양재역',    am:{tr:'57분',ca:'37분'}, pm:{tr:'65분',ca:'45분'}},
+        {dest:'판교',      am:{tr:'75분',ca:'50분'}, pm:{tr:'83분',ca:'58분'}},
+      ],
+      hub:[
+        {dest:'서울역',    am:{tr:'18분',ca:'12분'}, pm:{tr:'25분',ca:'16분'}},
+        {dest:'수서역',    am:{tr:'65분',ca:'46분'}, pm:{tr:'73분',ca:'54분'}},
+        {dest:'인천공항',  am:{tr:'60분',ca:'42분'}, pm:{tr:'68분',ca:'50분'}},
+        {dest:'김포공항',  am:{tr:'45분',ca:'30분'}, pm:{tr:'53분',ca:'37분'}},
+        {dest:'경부고속',  am:{tr:'-',   ca:'28분'}, pm:{tr:'-',   ca:'35분'}},
+      ]
+    },
+    infra:{
+      mart:{name:'이마트 신촌점', dist:'2.8km', car:'9분'},
+      dept:{name:'현대백화점 신촌점', dist:'3.5km', car:'11분'},
+      hosp:{name:'신촌세브란스병원', dist:'4.0km', car:'13분'},
+    }
+  },
+  {
+    id:'M', name:'독립문삼호아파트', gu:'서대문구', year:1987, units:532,
+    lat:37.5769, lng:126.9620,
+    kbUrl:'https://kbland.kr/se/c/1402',
+    station:'독립문역 (3호선) 도보 5분',
+    school:{name:'서울금화초', achievement:'중', note:'도보 10분'},
+    p59:{r:'8.5억', l:'8.2억'}, p84:{r:'12.0억', l:'11.7억'},
+    cm:{
+      work:[
+        {dest:'여의도',    am:{tr:'57분',ca:'34분'}, pm:{tr:'65분',ca:'41분'}},
+        {dest:'광화문',    am:{tr:'23분',ca:'16분'}, pm:{tr:'31분',ca:'22분'}},
+        {dest:'강남역',    am:{tr:'52분',ca:'33분'}, pm:{tr:'60분',ca:'40분'}},
+        {dest:'삼성역',    am:{tr:'57분',ca:'37분'}, pm:{tr:'65분',ca:'45분'}},
+        {dest:'양재역',    am:{tr:'59분',ca:'39분'}, pm:{tr:'67분',ca:'47분'}},
+        {dest:'판교',      am:{tr:'77분',ca:'52분'}, pm:{tr:'85분',ca:'60분'}},
+      ],
+      hub:[
+        {dest:'서울역',    am:{tr:'20분',ca:'13분'}, pm:{tr:'27분',ca:'17분'}},
+        {dest:'수서역',    am:{tr:'67분',ca:'48분'}, pm:{tr:'75분',ca:'56분'}},
+        {dest:'인천공항',  am:{tr:'62분',ca:'44분'}, pm:{tr:'70분',ca:'52분'}},
+        {dest:'김포공항',  am:{tr:'47분',ca:'32분'}, pm:{tr:'55분',ca:'39분'}},
+        {dest:'경부고속',  am:{tr:'-',   ca:'30분'}, pm:{tr:'-',   ca:'37분'}},
+      ]
+    },
+    infra:{
+      mart:{name:'이마트 신촌점', dist:'3.0km', car:'10분'},
+      dept:{name:'현대백화점 신촌점', dist:'3.7km', car:'12분'},
+      hosp:{name:'신촌세브란스병원', dist:'4.2km', car:'13분'},
+    }
+  },
+  {
+    id:'N', name:'무악현대아파트', gu:'종로구', year:1999, units:628,
+    lat:37.5789, lng:126.9599,
+    kbUrl:'https://kbland.kr/se/c/1403',
+    station:'독립문역 (3호선) 도보 5분',
+    school:{name:'서울교동초', achievement:'중상', note:'도보 10분'},
+    p59:{r:'9.0억', l:'8.7억'}, p84:{r:'12.8억', l:'12.4억'},
+    cm:{
+      work:[
+        {dest:'여의도',    am:{tr:'55분',ca:'33분'}, pm:{tr:'63분',ca:'40분'}},
+        {dest:'광화문',    am:{tr:'20분',ca:'13분'}, pm:{tr:'28분',ca:'19분'}},
+        {dest:'강남역',    am:{tr:'52분',ca:'33분'}, pm:{tr:'60분',ca:'40분'}},
+        {dest:'삼성역',    am:{tr:'57분',ca:'37분'}, pm:{tr:'65분',ca:'45분'}},
+        {dest:'양재역',    am:{tr:'59분',ca:'39분'}, pm:{tr:'67분',ca:'47분'}},
+        {dest:'판교',      am:{tr:'77분',ca:'52분'}, pm:{tr:'85분',ca:'60분'}},
+      ],
+      hub:[
+        {dest:'서울역',    am:{tr:'17분',ca:'11분'}, pm:{tr:'24분',ca:'15분'}},
+        {dest:'수서역',    am:{tr:'67분',ca:'48분'}, pm:{tr:'75분',ca:'56분'}},
+        {dest:'인천공항',  am:{tr:'62분',ca:'44분'}, pm:{tr:'70분',ca:'52분'}},
+        {dest:'김포공항',  am:{tr:'47분',ca:'32분'}, pm:{tr:'55분',ca:'39분'}},
+        {dest:'경부고속',  am:{tr:'-',   ca:'28분'}, pm:{tr:'-',   ca:'35분'}},
+      ]
+    },
+    infra:{
+      mart:{name:'이마트 광화문점', dist:'2.5km', car:'9분'},
+      dept:{name:'경복궁 인근 없음 (광화문 신세계)', dist:'3.0km', car:'10분'},
+      hosp:{name:'서울대학교병원', dist:'3.0km', car:'10분'},
+    }
+  },
+  {
+    id:'O', name:'DMC파크뷰자이1단지', gu:'서대문구', year:2015, units:2280,
+    lat:37.5689, lng:126.9139,
+    kbUrl:'https://kbland.kr/se/c/28216',
+    station:'가좌역 (경의중앙선) 도보 10분',
+    school:{name:'가재울초', achievement:'중상', note:'단지 내 위치·초품아'},
+    p59:{r:'11.5억', l:'11.0억'}, p84:{r:'14.9억', l:'14.4억'},
+    cm:{
+      work:[
+        {dest:'여의도',    am:{tr:'50분',ca:'30분'}, pm:{tr:'58분',ca:'37분'}},
+        {dest:'광화문',    am:{tr:'36분',ca:'23분'}, pm:{tr:'44분',ca:'30분'}},
+        {dest:'강남역',    am:{tr:'55분',ca:'36분'}, pm:{tr:'63분',ca:'43분'}},
+        {dest:'삼성역',    am:{tr:'60분',ca:'40분'}, pm:{tr:'68분',ca:'48분'}},
+        {dest:'양재역',    am:{tr:'62분',ca:'42분'}, pm:{tr:'70분',ca:'50분'}},
+        {dest:'판교',      am:{tr:'80분',ca:'55분'}, pm:{tr:'88분',ca:'63분'}},
+      ],
+      hub:[
+        {dest:'서울역',    am:{tr:'30분',ca:'19분'}, pm:{tr:'37분',ca:'24분'}},
+        {dest:'수서역',    am:{tr:'68분',ca:'48분'}, pm:{tr:'76분',ca:'56분'}},
+        {dest:'인천공항',  am:{tr:'52분',ca:'36분'}, pm:{tr:'60분',ca:'43분'}},
+        {dest:'김포공항',  am:{tr:'37분',ca:'24분'}, pm:{tr:'45분',ca:'30분'}},
+        {dest:'경부고속',  am:{tr:'-',   ca:'32분'}, pm:{tr:'-',   ca:'39분'}},
+      ]
+    },
+    infra:{
+      mart:{name:'홈플러스 월드컵점', dist:'2.5km', car:'8분'},
+      dept:{name:'NC백화점 불광점', dist:'4.2km', car:'14분'},
+      hosp:{name:'신촌세브란스병원', dist:'4.5km', car:'14분'},
+    }
+  },
+  {
+    id:'P', name:'DMC센트럴자이', gu:'은평구', year:2022, units:1464,
+    lat:37.5779, lng:126.9079,
+    kbUrl:'https://kbland.kr/se/c/324604',
+    station:'디지털미디어시티역 (6호선·공항철도·경의중앙선) 도보 5분',
+    school:{name:'증산초', achievement:'중', note:'도보 8분'},
+    p59:{r:'10.5억', l:'10.2억'}, p84:{r:'13.8억', l:'13.3억'},
+    cm:{
+      work:[
+        {dest:'여의도',    am:{tr:'50분',ca:'30분'}, pm:{tr:'58분',ca:'37분'}},
+        {dest:'광화문',    am:{tr:'35분',ca:'22분'}, pm:{tr:'43분',ca:'29분'}},
+        {dest:'강남역',    am:{tr:'60분',ca:'38분'}, pm:{tr:'68분',ca:'45분'}},
+        {dest:'삼성역',    am:{tr:'65분',ca:'42분'}, pm:{tr:'73분',ca:'50분'}},
+        {dest:'양재역',    am:{tr:'67분',ca:'44분'}, pm:{tr:'75분',ca:'52분'}},
+        {dest:'판교',      am:{tr:'85분',ca:'57분'}, pm:{tr:'93분',ca:'65분'}},
+      ],
+      hub:[
+        {dest:'서울역',    am:{tr:'25분',ca:'16분'}, pm:{tr:'32분',ca:'21분'}},
+        {dest:'수서역',    am:{tr:'70분',ca:'50분'}, pm:{tr:'78분',ca:'58분'}},
+        {dest:'인천공항',  am:{tr:'30분',ca:'25분'}, pm:{tr:'38분',ca:'32분'}},
+        {dest:'김포공항',  am:{tr:'20분',ca:'15분'}, pm:{tr:'28분',ca:'20분'}},
+        {dest:'경부고속',  am:{tr:'-',   ca:'30분'}, pm:{tr:'-',   ca:'37분'}},
+      ]
+    },
+    infra:{
+      mart:{name:'홈플러스 월드컵점', dist:'2.8km', car:'9분'},
+      dept:{name:'롯데백화점 은평점', dist:'3.5km', car:'12분'},
+      hosp:{name:'신촌세브란스병원', dist:'5.0km', car:'15분'},
+    }
+  },
+];
+
+// ═══════════════════════════════════════════════════════
+// 별점
+// ═══════════════════════════════════════════════════════
+const ratings = {};
+APTS.forEach(a => { ratings[a.id] = {jw:0, hy:0}; });
+const PTS = '12,2.5 14.8,8.9 21.7,9.8 16.9,14.4 18.2,21.2 12,17.9 5.8,21.2 7.1,14.4 2.3,9.8 9.2,8.9';
+
+function starSVG(f) {
+  const on='#F5A623', off='#DDD8D2';
+  if(f===1) return `<svg viewBox="0 0 24 24"><polygon points="${PTS}" fill="${on}" stroke="${on}" stroke-width=".4"/></svg>`;
+  if(f===.5){const id='h'+(Math.random()*1e6|0);return `<svg viewBox="0 0 24 24"><defs><clipPath id="${id}"><rect x="0" y="0" width="12" height="24"/></clipPath></defs><polygon points="${PTS}" fill="${off}" stroke="${off}" stroke-width=".4"/><polygon points="${PTS}" fill="${on}" stroke="${on}" stroke-width=".4" clip-path="url(#${id})"/></svg>`;}
+  return `<svg viewBox="0 0 24 24"><polygon points="${PTS}" fill="${off}" stroke="${off}" stroke-width=".4"/></svg>`;
+}
+
+function renderStars(el, val, n) {
+  el.innerHTML='';
+  for(let i=1;i<=n;i++){
+    const f = val>=i?1:val>=i-.5?.5:0;
+    const s=document.createElement('span');
+    s.className='star'; s.dataset.star=i;
+    s.innerHTML=starSVG(f);
+    el.appendChild(s);
   }
+}
 
-  function updateRatings(card) {
-    const jw = ratings[card].jw;
-    const hy = ratings[card].hy;
-
-    // re-render interactive stars
-    document.querySelectorAll(`.stars[data-card="${card}"]`).forEach(el => {
-      const person = el.dataset.person;
-      renderStars(el, ratings[card][person], true);
-    });
-
-    // score text
-    document.getElementById(`score-${card}-jw`).textContent = jw > 0 ? jw.toFixed(1) : '-';
-    document.getElementById(`score-${card}-hy`).textContent = hy > 0 ? hy.toFixed(1) : '-';
-
-    // average
-    const bothRated = jw > 0 && hy > 0;
-    const avg = bothRated ? Math.round((jw + hy) / 2 * 2) / 2 : 0;
-    const avgEl = document.getElementById(`score-${card}-avg`);
-    const avgStarsEl = document.getElementById(`avg-stars-${card}`);
-    avgEl.textContent = bothRated ? avg.toFixed(1) : '-';
-    renderStars(avgStarsEl, avg, false);
-  }
-
-  // 초기화 — 모든 별점 위젯 렌더링
-  function initStars() {
-    document.querySelectorAll('.stars[data-card]').forEach(el => {
-      const card = el.dataset.card;
-      const person = el.dataset.person;
-      renderStars(el, ratings[card][person], true);
-    });
-    ['A', 'B', 'C'].forEach(card => {
-      const avgStarsEl = document.getElementById(`avg-stars-${card}`);
-      renderStars(avgStarsEl, 0, false);
-    });
-  }
-
-  initStars();
-
-  // ── 네비게이션 스크롤 ───────────────────────────────────────────
-  const sections = ['journey', 'map', 'checklist', 'reveal'];
-  const navBtns = document.querySelectorAll('.nav-btn');
-
-  window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(id => {
-      const el = document.getElementById(id);
-      if (el && window.scrollY >= el.offsetTop - 200) current = id;
-    });
-    navBtns.forEach((btn, i) => {
-      btn.classList.toggle('active', i === sections.indexOf(current));
-    });
+function initStars(el, aptId, who) {
+  renderStars(el, 0, 10);
+  el.addEventListener('mousemove', e=>{
+    const s=e.target.closest('[data-star]'); if(!s) return;
+    const i=parseInt(s.dataset.star);
+    const r=s.getBoundingClientRect();
+    renderStars(el, e.clientX<r.left+r.width/2?i-.5:i, 10);
   });
-
-  // ── 체크리스트 클릭 토글 ──────────────────────────────────────
-  document.querySelectorAll('.check-item').forEach(item => {
-    item.addEventListener('click', () => {
-      const box = item.querySelector('.check-box');
-      const text = item.querySelector('.check-text');
-      if (box.classList.contains('checked')) {
-        box.classList.remove('checked');
-        box.textContent = '';
-        text.classList.remove('done');
-      } else {
-        box.classList.remove('partial');
-        box.classList.add('checked');
-        box.textContent = '✓';
-        text.classList.add('done');
-      }
-    });
+  el.addEventListener('mouseleave', ()=>renderStars(el, ratings[aptId][who], 10));
+  el.addEventListener('click', e=>{
+    const s=e.target.closest('[data-star]'); if(!s) return;
+    const i=parseInt(s.dataset.star);
+    const r=s.getBoundingClientRect();
+    const nv=e.clientX<r.left+r.width/2?i-.5:i;
+    ratings[aptId][who]=ratings[aptId][who]===nv?0:nv;
+    renderStars(el, ratings[aptId][who], 10);
+    refreshRating(aptId);
+    if(curSort==='rating') sortCards('rating',false);
   });
+}
+
+function refreshRating(id) {
+  const {jw,hy}=ratings[id];
+  const jv=document.getElementById(`v-${id}-jw`);
+  const hv=document.getElementById(`v-${id}-hy`);
+  const av=document.getElementById(`v-${id}-av`);
+  const as=document.getElementById(`s-${id}-av`);
+  if(jv) jv.textContent=jw>0?jw.toFixed(1):'-';
+  if(hv) hv.textContent=hy>0?hy.toFixed(1):'-';
+  const both=jw>0&&hy>0;
+  const avg=both?Math.round((jw+hy)*2)/4:(jw||hy||0);
+  if(av) av.textContent=(jw>0||hy>0)?avg.toFixed(1):'-';
+  if(as) renderStars(as, avg, 10);
+  updateRanks();
+}
+
+function getAvg(id){const{jw,hy}=ratings[id];if(jw>0&&hy>0)return(jw+hy)/2;return jw||hy||0;}
+
+function updateRanks(){
+  APTS.forEach(a=>{
+    const c=document.getElementById(`card-${a.id}`);if(!c)return;
+    c.classList.remove('r1','r2','r3');
+    const b=c.querySelector('.rank-badge');if(b)b.remove();
+  });
+  [...APTS].filter(a=>getAvg(a.id)>0).sort((a,b)=>getAvg(b.id)-getAvg(a.id)).slice(0,3).forEach((a,i)=>{
+    const c=document.getElementById(`card-${a.id}`);if(!c)return;
+    c.classList.add('r'+(i+1));
+    const b=document.createElement('div');b.className='rank-badge';b.textContent=i+1;c.appendChild(b);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// 학업성취도 배지
+// ═══════════════════════════════════════════════════════
+function achClass(lv){
+  return {high:'ach-high',중상:'ach-mid-high',중:'ach-mid',low:'ach-low'}[lv]||'ach-mid';
+}
+function achLabel(lv){
+  return {high:'최상위권',중상:'중상위권',중:'중위권',low:'하위권'}[lv]||lv;
+}
+
+// ═══════════════════════════════════════════════════════
+// 카드 빌드
+// ═══════════════════════════════════════════════════════
+// 카카오 스태틱 위성지도 (API 키 없이 일부 동작, 실패 시 fallback)
+function kakaoImgUrl(lat, lng){
+  return `https://map.kakao.com/link/map/${encodeURIComponent('단지')},${lat},${lng}`;
+}
+
+// 카카오맵 썸네일 (공개 스태틱 API)
+function aptImgUrl(lat, lng){
+  // 카카오 스태틱맵 — API 키 필요 없는 레거시 버전
+  return `https://t1.daumcdn.net/localimg/localimages/07/mapjsapi/2x/thum_skyview.jpg`;
+  // 실제 단지 이미지는 직접 업로드하거나 네이버 부동산 링크 클릭 유도
+}
+
+function buildCard(apt, num) {
+  const d = document.createElement('div');
+  d.className='card'; d.id=`card-${apt.id}`;
+
+  // 출퇴근 탭 HTML
+  const workRows = apt.cm.work.map(r=>`
+    <div class="ct-item">
+      <div class="ct-dest">${r.dest}</div>
+      <div class="ct-rows">
+        <div class="ct-row"><span class="ct-row-lbl">출근</span><span class="t-bus">🚌${r.am.tr}</span><span class="ct-dot">·</span><span class="t-car">🚗${r.am.ca}</span></div>
+        <div class="ct-row"><span class="ct-row-lbl">퇴근</span><span class="t-bus">🚌${r.pm.tr}</span><span class="ct-dot">·</span><span class="t-car">🚗${r.pm.ca}</span></div>
+      </div>
+    </div>`).join('');
+
+  const hubRows = apt.cm.hub.map(r=>`
+    <div class="ct-item">
+      <div class="ct-dest">${r.dest}</div>
+      <div class="ct-rows">
+        <div class="ct-row"><span class="ct-row-lbl">출근</span>${r.am.tr!=='-'?`<span class="t-bus">🚌${r.am.tr}</span><span class="ct-dot">·</span>`:''}<span class="t-car">🚗${r.am.ca}</span></div>
+        <div class="ct-row"><span class="ct-row-lbl">퇴근</span>${r.pm.tr!=='-'?`<span class="t-bus">🚌${r.pm.tr}</span><span class="ct-dot">·</span>`:''}<span class="t-car">🚗${r.pm.ca}</span></div>
+      </div>
+    </div>`).join('');
+
+  d.innerHTML=`
+    <div class="apt-img-wrap">
+      <img class="apt-img"
+        src="https://maps.googleapis.com/maps/api/streetview?size=800x200&location=${apt.lat},${apt.lng}&fov=80&heading=180&pitch=5&key=YOUR_GOOGLE_KEY"
+        onerror="this.onerror=null;this.src='https://via.placeholder.com/800x200/E0DBD4/9E9890?text=${encodeURIComponent(apt.name)}'"
+        alt="${apt.name}" loading="lazy">
+      <div class="apt-img-overlay"></div>
+      <a class="apt-kb-link" href="${apt.kbUrl}" target="_blank">KB부동산 보기 →</a>
+      <div class="apt-img-label">이미지: Google Street View</div>
+    </div>
+
+    <div class="c-head">
+      <div class="c-idx" id="idx-${apt.id}">${num}</div>
+      <div>
+        <div class="c-name">${apt.name}</div>
+        <div class="c-loc">${apt.gu}</div>
+        <div class="c-station">🚇 ${apt.station}</div>
+      </div>
+    </div>
+
+    <div class="c-info">
+      <div class="i-cell"><div class="i-lbl">세대수</div><div class="i-val">${apt.units.toLocaleString()}세대</div></div>
+      <div class="i-cell"><div class="i-lbl">입주연도</div><div class="i-val">${apt.year}년</div></div>
+      <div class="i-cell"><div class="i-lbl">연식</div><div class="i-val">${2025-apt.year+1}년차</div></div>
+    </div>
+
+    <div class="c-school">
+      <div style="font-size:9px;color:var(--gray);letter-spacing:.4px;margin-right:4px;padding-top:6px;">🏫 배정초등학교</div>
+      <div class="school-badge">
+        <span class="school-name">${apt.school.name}</span>
+        <span class="school-achievement ${achClass(apt.school.achievement)}">${achLabel(apt.school.achievement)}</span>
+        <span style="font-size:10px;color:var(--gray);margin-left:2px;">${apt.school.note}</span>
+      </div>
+    </div>
+
+    <div class="c-price">
+      <div class="p-block">
+        <div class="p-type">59㎡ (25평형)</div>
+        <div class="p-row"><span>최근 실거래</span><span>${apt.p59.r}</span></div>
+        <div class="p-row"><span>현재 최저매물</span><span class="p-low">${apt.p59.l}</span></div>
+      </div>
+      <div class="p-block">
+        <div class="p-type">84㎡ (34평형)</div>
+        <div class="p-row"><span>최근 실거래</span><span>${apt.p84.r}</span></div>
+        <div class="p-row"><span>현재 최저매물</span><span class="p-low">${apt.p84.l}</span></div>
+      </div>
+    </div>
+
+    <div class="c-commute">
+      <div class="commute-tabs">
+        <div class="ctab on" onclick="switchTab(this,'work-${apt.id}','${apt.id}')">🏢 직장·업무지구</div>
+        <div class="ctab" onclick="switchTab(this,'hub-${apt.id}','${apt.id}')">🚄 교통 허브</div>
+      </div>
+      <div class="commute-panel on" id="work-${apt.id}">
+        <div class="ct-title">오전 8시 출근 / 오후 6시 퇴근 기준 · 🚌 대중교통  🚗 자동차</div>
+        <div class="ct-grid">${workRows}</div>
+      </div>
+      <div class="commute-panel" id="hub-${apt.id}">
+        <div class="ct-title">오전 8시 출근 / 오후 6시 퇴근 기준 · 🚌 대중교통  🚗 자동차 · 경부고속은 자동차 기준</div>
+        <div class="ct-grid-wide">${hubRows}</div>
+      </div>
+    </div>
+
+    <div class="c-infra">
+      <div class="infra-title">🛒 주변 생활 인프라</div>
+      <div class="infra-grid">
+        <div class="infra-item">
+          <div class="infra-type">대형마트</div>
+          <div class="infra-name">${apt.infra.mart.name}</div>
+          <div class="infra-dist">📍 ${apt.infra.mart.dist}</div>
+          <div class="infra-car">🚗 자차 ${apt.infra.mart.car}</div>
+        </div>
+        <div class="infra-item">
+          <div class="infra-type">백화점</div>
+          <div class="infra-name">${apt.infra.dept.name}</div>
+          <div class="infra-dist">📍 ${apt.infra.dept.dist}</div>
+          <div class="infra-car">🚗 자차 ${apt.infra.dept.car}</div>
+        </div>
+        <div class="infra-item">
+          <div class="infra-type">대학병원</div>
+          <div class="infra-name">${apt.infra.hosp.name}</div>
+          <div class="infra-dist">📍 ${apt.infra.hosp.dist}</div>
+          <div class="infra-car">🚗 자차 ${apt.infra.hosp.car}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="c-rating">
+      <div class="r-row">
+        <span class="r-who">재원</span>
+        <div class="stars" id="s-${apt.id}-jw"></div>
+        <span class="r-val" id="v-${apt.id}-jw">-</span>
+      </div>
+      <div class="r-row">
+        <span class="r-who">희영</span>
+        <div class="stars" id="s-${apt.id}-hy"></div>
+        <span class="r-val" id="v-${apt.id}-hy">-</span>
+      </div>
+      <hr class="avg-div">
+      <div class="r-row">
+        <span class="r-who avg">평균</span>
+        <div class="stars avg-stars" id="s-${apt.id}-av"></div>
+        <span class="r-val avg" id="v-${apt.id}-av">-</span>
+      </div>
+    </div>
+
+    <div class="c-comment">
+      <div class="cm-lbl">한줄평</div>
+      <div class="cm-grid">
+        <div class="cm-wrap"><span class="cm-who">재원</span><textarea class="cm-input" rows="2" placeholder="한줄평 입력..."></textarea></div>
+        <div class="cm-wrap"><span class="cm-who">희영</span><textarea class="cm-input" rows="2" placeholder="한줄평 입력..."></textarea></div>
+      </div>
+    </div>`;
+  return d;
+}
+
+// tab switch
+function switchTab(el, panelId, aptId) {
+  const card = document.getElementById(`card-${aptId}`);
+  card.querySelectorAll('.ctab').forEach(t=>t.classList.remove('on'));
+  card.querySelectorAll('.commute-panel').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById(panelId).classList.add('on');
+}
+
+// ═══════════════════════════════════════════════════════
+// 정렬
+// ═══════════════════════════════════════════════════════
+let curSort='rating';
+function sortCards(type, updBtn=true){
+  curSort=type;
+  if(updBtn) document.querySelectorAll('.sort-btn').forEach(b=>b.classList.toggle('on',b.dataset.s===type));
+  const wrap=document.getElementById('cards');
+  const order=type==='rating'
+    ?[...APTS].sort((a,b)=>{const ra=getAvg(a.id),rb=getAvg(b.id);if(!ra&&!rb)return APTS.indexOf(a)-APTS.indexOf(b);if(!ra)return 1;if(!rb)return -1;return rb-ra;})
+    :APTS;
+  order.forEach((apt,i)=>{
+    const c=document.getElementById(`card-${apt.id}`);
+    const ix=c.querySelector(`#idx-${apt.id}`);
+    if(ix) ix.textContent=i+1;
+    wrap.appendChild(c);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// init
+// ═══════════════════════════════════════════════════════
+function init(){
+  const wrap=document.getElementById('cards');
+  APTS.forEach((apt,i)=>{wrap.appendChild(buildCard(apt,i+1));});
+  APTS.forEach(apt=>{
+    initStars(document.getElementById(`s-${apt.id}-jw`),apt.id,'jw');
+    initStars(document.getElementById(`s-${apt.id}-hy`),apt.id,'hy');
+    renderStars(document.getElementById(`s-${apt.id}-av`),0,10);
+  });
+}
+init();
+
+// ═══════════════════════════════════════════════════════
+// 네이버 지도
+// ═══════════════════════════════════════════════════════
+function initMap(){
+  if(typeof naver==='undefined'||typeof naver.maps==='undefined'){document.getElementById('map-fallback').style.display='flex';return;}
+  const bounds=new naver.maps.LatLngBounds();
+  APTS.forEach(a=>bounds.extend(new naver.maps.LatLng(a.lat,a.lng)));
+  const map=new naver.maps.Map('naver-map',{bounds,mapTypeControl:false,scaleControl:false,logoControl:true,mapDataControl:false});
+  const iws=[];
+  APTS.forEach((apt,i)=>{
+    const marker=new naver.maps.Marker({
+      position:new naver.maps.LatLng(apt.lat,apt.lng),map,
+      icon:{content:`<div style="background:#1A1A1A;color:#fff;padding:4px 10px;border-radius:14px;font-size:11px;font-weight:500;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.28);cursor:pointer;position:relative;"><span style="color:#F5A623;margin-right:3px;">${i+1}</span>${apt.name}<div style="position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#1A1A1A;border-bottom:none;"></div></div>`,anchor:new naver.maps.Point(55,28)},
+    });
+    const iw=new naver.maps.InfoWindow({
+      content:`<div style="padding:13px 15px;font-family:'Noto Sans KR',sans-serif;min-width:185px;border-radius:10px;"><div style="font-size:13px;font-weight:700;margin-bottom:2px;">${apt.name}</div><div style="font-size:10px;color:#888;margin-bottom:6px;">${apt.station}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;"><div style="background:#F7F4EF;border-radius:6px;padding:6px 8px;"><div style="font-size:9px;color:#888;margin-bottom:2px;">59㎡</div><div style="font-size:13px;font-weight:700;color:#C0622A;">${apt.p59.r}</div></div><div style="background:#F7F4EF;border-radius:6px;padding:6px 8px;"><div style="font-size:9px;color:#888;margin-bottom:2px;">84㎡</div><div style="font-size:13px;font-weight:700;color:#C0622A;">${apt.p84.r}</div></div></div></div>`,
+      borderWidth:0,backgroundColor:'#fff',borderRadius:'12px',boxShadow:'0 6px 24px rgba(0,0,0,.14)',pixelOffset:new naver.maps.Point(0,-10),disableAnchor:true,
+    });
+    iws.push(iw);
+    naver.maps.Event.addListener(marker,'click',()=>{iws.forEach((w,j)=>{if(j!==i)w.close();});iw.getMap()?iw.close():iw.open(map,marker);});
+  });
+}
+window.addEventListener('load',initMap);
 </script>
 </body>
 </html>
