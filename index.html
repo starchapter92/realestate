@@ -202,15 +202,7 @@ textarea.cm-input:focus{border-color:var(--accent);background:#fff;}
 textarea.cm-input::placeholder{color:#c5c0ba;}
 
 
-/* 구별 그룹 헤더 */
-.gu-group{margin-bottom:28px;}
-.gu-header{display:flex;align-items:center;gap:10px;padding:10px 4px;margin-bottom:12px;border-bottom:2px solid var(--charcoal);}
-.gu-badge{background:var(--charcoal);color:#fff;font-size:10px;font-weight:600;padding:3px 10px;border-radius:100px;letter-spacing:.4px;white-space:nowrap;}
-.gu-name{font-size:15px;font-weight:700;color:var(--charcoal);font-family:'Noto Serif KR',serif;}
-.gu-count{font-size:11px;color:var(--gray);margin-left:auto;}
-.gu-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;}
-@media(max-width:640px){
-  .gu-cards{grid-template-columns:1fr;}
+
   .gu-header{padding:8px 2px;}
   .gu-name{font-size:14px;}
 }
@@ -222,6 +214,23 @@ textarea.cm-input::placeholder{color:#c5c0ba;}
   .map-wrap{height:50vh;}
   .apt-img{height:130px;}
 }
+
+/* ── 구별 카드 스타일 ───────────────────────── */
+.card{border-top:4px solid var(--card-gu-color, var(--border)) !important;}
+.gu-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:.3px;margin-bottom:6px;}
+
+/* ── 구별 구분선 (같은 구 첫 카드 앞) ────────── */
+.gu-section-label{
+  grid-column:1/-1;
+  display:flex;align-items:center;gap:10px;
+  padding:14px 2px 6px;
+  margin-top:8px;
+}
+.gu-section-label:first-child{margin-top:0;padding-top:6px;}
+.gu-section-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.gu-section-name{font-size:13px;font-weight:700;font-family:'Noto Serif KR',serif;color:var(--charcoal);}
+.gu-section-count{font-size:11px;color:var(--gray);background:var(--border);padding:2px 8px;border-radius:100px;}
+.gu-section-line{flex:1;height:1px;background:var(--border);}
 </style>
 </head>
 <body>
@@ -1033,7 +1042,7 @@ function buildCard(apt, num) {
       <div class="c-idx no-rank" id="idx-${apt.id}"></div>
       <div>
         <div class="c-name">${apt.name}</div>
-        <div class="c-loc">${apt.gu}</div>
+        <div class="c-loc" style="display:none">${apt.gu}</div>
         <div class="c-station">🚇 ${apt.station}</div>
       </div>
     </div>
@@ -1405,67 +1414,54 @@ function showToast(msg) {
   t._timer = setTimeout(() => t.style.opacity = '0', 2000);
 }
 
-// 구별 색상 매핑
+// ── 구별 색상 & 순서 ──────────────────────────────────────────────
 const GU_COLORS = {
-  '마포구':   {bg:'#EBF4FF', border:'#2B6CB0'},
-  '서대문구': {bg:'#F0FFF4', border:'#276749'},
-  '중구':     {bg:'#FFFFF0', border:'#C05621'},
-  '영등포구': {bg:'#FFF5F5', border:'#C53030'},
-  '동작구':   {bg:'#FAF5FF', border:'#6B46C1'},
-  '양천구':   {bg:'#FFFAF0', border:'#C05621'},
-  '강서구':   {bg:'#E6FFFA', border:'#2C7A7B'},
-  '종로구':   {bg:'#FFF5F7', border:'#97266D'},
-  '은평구':   {bg:'#F7FAFC', border:'#2C5282'},
-  '송파구':   {bg:'#FFF0F5', border:'#B83280'},
+  '양천구':   {bar:'#C05621', light:'#FFF8F3'},
+  '강서구':   {bar:'#2C7A7B', light:'#F0FAFA'},
+  '영등포구': {bar:'#C53030', light:'#FFF5F5'},
+  '동작구':   {bar:'#6B46C1', light:'#FAF5FF'},
+  '마포구':   {bar:'#2B6CB0', light:'#EBF4FF'},
+  '서대문구': {bar:'#276749', light:'#F0FFF4'},
+  '은평구':   {bar:'#4A5568', light:'#F7FAFC'},
+  '종로구':   {bar:'#97266D', light:'#FFF5F7'},
+  '중구':     {bar:'#B7791F', light:'#FFFDF0'},
+  '송파구':   {bar:'#B83280', light:'#FFF0F9'},
 };
-
-// 구 순서 (지리적으로 자연스럽게)
-const GU_ORDER = ['마포구','서대문구','은평구','종로구','중구','영등포구','동작구','양천구','강서구','송파구'];
+const GU_ORDER = ['양천구','강서구','영등포구','동작구','마포구','서대문구','은평구','종로구','중구','송파구'];
 
 function init(){
   const wrap = document.getElementById('cards');
   wrap.innerHTML = '';
 
-  // 구별 그룹핑
+  // 구별로 묶어서 정의된 순서대로 렌더
   const byGu = {};
-  APTS.forEach(apt => {
-    if (!byGu[apt.gu]) byGu[apt.gu] = [];
-    byGu[apt.gu].push(apt);
-  });
+  APTS.forEach(apt => { if(!byGu[apt.gu]) byGu[apt.gu]=[]; byGu[apt.gu].push(apt); });
+  const guList = GU_ORDER.filter(g => byGu[g]);
 
-  // 구 순서대로 렌더
-  const guList = GU_ORDER.filter(g => byGu[g]).concat(Object.keys(byGu).filter(g => !GU_ORDER.includes(g)));
   guList.forEach(gu => {
-    const apts = byGu[gu];
-    const color = GU_COLORS[gu] || {bg:'#F7F4EF', border:'#6B6560'};
+    const color = GU_COLORS[gu] || {bar:'#6B6560', light:'#F7F4EF'};
+    const apts  = byGu[gu];
 
-    const section = document.createElement('div');
-    section.className = 'gu-group';
-    section.id = `gu-${gu}`;
-    section.style.cssText = `background:${color.bg};border:1.5px solid ${color.border};border-radius:14px;padding:14px;`;
-
-    section.innerHTML = `
-      <div class="gu-header" style="border-bottom-color:${color.border}">
-        <span class="gu-badge" style="background:${color.border}">${gu}</span>
-        <span class="gu-name">${gu} 후보 단지</span>
-        <span class="gu-count">${apts.length}개 단지</span>
-      </div>
-      <div class="gu-cards" id="gu-cards-${gu}"></div>
+    // 구 섹션 레이블
+    const label = document.createElement('div');
+    label.className = 'gu-section-label';
+    label.dataset.gu = gu;
+    label.innerHTML = `
+      <span class="gu-section-dot" style="background:${color.bar}"></span>
+      <span class="gu-section-name" style="color:${color.bar}">${gu}</span>
+      <span class="gu-section-count">${apts.length}개 단지</span>
+      <span class="gu-section-line"></span>
     `;
-    wrap.appendChild(section);
+    wrap.appendChild(label);
 
-    const cardWrap = section.querySelector(`#gu-cards-${gu}`);
+    // 구 카드들 렌더
     apts.forEach((apt, i) => {
-      cardWrap.appendChild(buildCard(apt, i + 1));
+      const card = buildCard(apt, i + 1);
+      card.style.setProperty('--card-gu-color', color.bar);
+      card.style.background = color.light;
+      wrap.appendChild(card);
     });
   });
-
-  APTS.forEach(apt=>{
-    initStars(document.getElementById(`s-${apt.id}-jw`),apt.id,'jw');
-    initStars(document.getElementById(`s-${apt.id}-hy`),apt.id,'hy');
-    renderStars(document.getElementById(`s-${apt.id}-av`),0,10);
-  });
-
   // ── 한줄평 자동저장 이벤트 연결 ──────────────────────
   APTS.forEach(apt => {
     const card = document.getElementById(`card-${apt.id}`);
