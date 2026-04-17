@@ -219,18 +219,69 @@ textarea.cm-input::placeholder{color:#c5c0ba;}
 .card{border-top:4px solid var(--card-gu-color, var(--border)) !important;}
 .gu-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:.3px;margin-bottom:6px;}
 
-/* ── 구별 구분선 (같은 구 첫 카드 앞) ────────── */
-.gu-section-label{
-  grid-column:1/-1;
-  display:flex;align-items:center;gap:10px;
-  padding:14px 2px 6px;
-  margin-top:8px;
-}
 .gu-section-label:first-child{margin-top:0;padding-top:6px;}
 .gu-section-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
 .gu-section-name{font-size:13px;font-weight:700;font-family:'Noto Serif KR',serif;color:var(--charcoal);}
 .gu-section-count{font-size:11px;color:var(--gray);background:var(--border);padding:2px 8px;border-radius:100px;}
 .gu-section-line{flex:1;height:1px;background:var(--border);}
+
+/* ─── 구별 아코디언 섹션 ───────────────────────────────── */
+.gu-section {
+  margin-bottom: 20px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,.07);
+}
+.gu-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity .15s;
+}
+.gu-section-header:hover { opacity: .85; }
+.gu-section-header-left { display: flex; align-items: center; gap: 10px; flex: 1; }
+.gu-section-icon { font-size: 16px; }
+.gu-section-name {
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Noto Serif KR', serif;
+  color: #fff;
+  letter-spacing: -.2px;
+}
+.gu-section-count {
+  font-size: 11px;
+  color: rgba(255,255,255,.75);
+  background: rgba(255,255,255,.2);
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+.gu-section-chevron {
+  font-size: 14px;
+  color: rgba(255,255,255,.8);
+  transition: transform .25s ease;
+  flex-shrink: 0;
+}
+.gu-section.collapsed .gu-section-chevron { transform: rotate(-90deg); }
+.gu-section-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 14px;
+  padding: 14px;
+  transition: all .25s ease;
+}
+.gu-section.collapsed .gu-section-body {
+  display: none;
+}
+@media(max-width:680px){
+  .gu-section-body { grid-template-columns: 1fr; }
+  .gu-section-name { font-size: 14px; }
+}
+
+/* 카드 상단 구 색상 바 제거 (섹션 헤더로 대체) */
+.card { border-top: none !important; }
 </style>
 </head>
 <body>
@@ -1213,25 +1264,49 @@ let curSort='rating';
 function sortCards(type, updBtn=true){
   curSort=type;
   if(updBtn) document.querySelectorAll('.sort-btn').forEach(b=>b.classList.toggle('on',b.dataset.s===type));
-  const wrap=document.getElementById('cards');
-  const order=type==='rating'
-    ?[...APTS].sort((a,b)=>{const ra=getAvg(a.id),rb=getAvg(b.id);if(!ra&&!rb)return APTS.indexOf(a)-APTS.indexOf(b);if(!ra)return 1;if(!rb)return -1;return rb-ra;})
-    :APTS;
-  order.forEach((apt,i)=>{
-    const c=document.getElementById(`card-${apt.id}`);
-    const ix=c.querySelector(`#idx-${apt.id}`);
-    if(ix){
-      const avg=getAvg(apt.id);
-      if(avg){
-        ix.textContent=i+1;
-        ix.classList.remove('no-rank');
-      } else {
-        ix.textContent='';
-        ix.classList.add('no-rank');
-      }
-    }
-    wrap.appendChild(c);
-  });
+
+  const byGu={};
+  APTS.forEach(apt=>{ if(!byGu[apt.gu]) byGu[apt.gu]=[]; byGu[apt.gu].push(apt); });
+
+  if(type==='rating'){
+    // 전체 평점 순위 계산
+    const sorted=[...APTS].sort((a,b)=>{
+      const ra=getAvg(a.id),rb=getAvg(b.id);
+      if(!ra&&!rb)return 0; if(!ra)return 1; if(!rb)return -1; return rb-ra;
+    });
+    const rankMap={};
+    sorted.forEach((apt,i)=>{ rankMap[apt.id]=i+1; });
+
+    // 구 내부를 평점순 재배치
+    GU_ORDER.filter(g=>byGu[g]).forEach(gu=>{
+      const body=document.getElementById(`gu-body-${gu}`);
+      if(!body) return;
+      [...byGu[gu]].sort((a,b)=>{
+        const ra=getAvg(a.id),rb=getAvg(b.id);
+        if(!ra&&!rb)return 0; if(!ra)return 1; if(!rb)return -1; return rb-ra;
+      }).forEach(apt=>{
+        const c=document.getElementById(`card-${apt.id}`);
+        const ix=c.querySelector(`#idx-${apt.id}`);
+        if(ix){
+          const avg=getAvg(apt.id);
+          if(avg){ ix.textContent=rankMap[apt.id]; ix.classList.remove('no-rank'); }
+          else   { ix.textContent=''; ix.classList.add('no-rank'); }
+        }
+        body.appendChild(c);
+      });
+    });
+  } else {
+    GU_ORDER.filter(g=>byGu[g]).forEach(gu=>{
+      const body=document.getElementById(`gu-body-${gu}`);
+      if(!body) return;
+      byGu[gu].forEach(apt=>{
+        const c=document.getElementById(`card-${apt.id}`);
+        const ix=c.querySelector(`#idx-${apt.id}`);
+        if(ix){ ix.textContent=''; ix.classList.add('no-rank'); }
+        body.appendChild(c);
+      });
+    });
+  }
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1427,40 +1502,65 @@ const GU_COLORS = {
   '중구':     {bar:'#B7791F', light:'#FFFDF0'},
   '송파구':   {bar:'#B83280', light:'#FFF0F9'},
 };
+const GU_ICONS = {
+  '양천구':'🏙️','강서구':'✈️','영등포구':'🌉','동작구':'🌿',
+  '마포구':'🌊','서대문구':'🏛️','은평구':'🔵','종로구':'🏯',
+  '중구':'🏢','송파구':'🌸',
+};
 const GU_ORDER = ['양천구','강서구','영등포구','동작구','마포구','서대문구','은평구','종로구','중구','송파구'];
+
+function toggleGuSection(gu) {
+  const sec = document.getElementById(`gu-sec-${gu}`);
+  if (sec) sec.classList.toggle('collapsed');
+}
 
 function init(){
   const wrap = document.getElementById('cards');
   wrap.innerHTML = '';
 
-  // 구별로 묶어서 정의된 순서대로 렌더
+  // 구별로 묶기
   const byGu = {};
   APTS.forEach(apt => { if(!byGu[apt.gu]) byGu[apt.gu]=[]; byGu[apt.gu].push(apt); });
-  const guList = GU_ORDER.filter(g => byGu[g]);
 
-  guList.forEach(gu => {
+  GU_ORDER.filter(g => byGu[g]).forEach(gu => {
     const color = GU_COLORS[gu] || {bar:'#6B6560', light:'#F7F4EF'};
+    const icon  = GU_ICONS[gu] || '🏠';
     const apts  = byGu[gu];
 
-    // 구 섹션 레이블
-    const label = document.createElement('div');
-    label.className = 'gu-section-label';
-    label.dataset.gu = gu;
-    label.innerHTML = `
-      <span class="gu-section-dot" style="background:${color.bar}"></span>
-      <span class="gu-section-name" style="color:${color.bar}">${gu}</span>
-      <span class="gu-section-count">${apts.length}개 단지</span>
-      <span class="gu-section-line"></span>
-    `;
-    wrap.appendChild(label);
+    // 섹션 컨테이너
+    const section = document.createElement('div');
+    section.className = 'gu-section';
+    section.id = `gu-sec-${gu}`;
 
-    // 구 카드들 렌더
-    apts.forEach((apt, i) => {
-      const card = buildCard(apt, i + 1);
-      card.style.setProperty('--card-gu-color', color.bar);
-      card.style.background = color.light;
-      wrap.appendChild(card);
+    // 헤더
+    const header = document.createElement('div');
+    header.className = 'gu-section-header';
+    header.style.background = color.bar;
+    header.onclick = () => toggleGuSection(gu);
+    header.innerHTML = `
+      <div class="gu-section-header-left">
+        <span class="gu-section-icon">${icon}</span>
+        <span class="gu-section-name">${gu}</span>
+        <span class="gu-section-count">${apts.length}개 단지</span>
+      </div>
+      <span class="gu-section-chevron">▼</span>
+    `;
+
+    // 카드 바디
+    const body = document.createElement('div');
+    body.className = 'gu-section-body';
+    body.style.background = color.light;
+    body.id = `gu-body-${gu}`;
+
+    apts.forEach(apt => {
+      const card = buildCard(apt, 0);
+      card.style.background = '#fff';
+      body.appendChild(card);
     });
+
+    section.appendChild(header);
+    section.appendChild(body);
+    wrap.appendChild(section);
   });
   // ── 한줄평 자동저장 이벤트 연결 ──────────────────────
   APTS.forEach(apt => {
