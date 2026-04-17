@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>재원&희영 신혼집 찾기</title>
+<title>재원 & 희영 신혼집 찾기 프로젝트 </title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -287,7 +287,7 @@ textarea.cm-input::placeholder{color:#c5c0ba;}
 <body>
 
 <div class="map-wrap">
-  <div class="map-title">🏠 재원 & 희영 신혼집 후보 단지 16곳</div>
+  <div class="map-title">🏠 재원 & 희영 신혼 자가 후보 단지 16곳</div>
   <div id="naver-map"></div>
   <div class="map-fallback" id="map-fallback">
     <strong>⚠️ 지도 로드 실패</strong>
@@ -1665,6 +1665,118 @@ function init(){
     }
   });
 }
+// ═══════════════════════════════════════════════════════
+// 국토교통부 실거래가 자동 로드
+// ═══════════════════════════════════════════════════════
+const APT_API_INFO = {
+  'A': {aptNm:'목동센트럴아이파크위브', lawdCd:'11470', area59:[56,62], area84:[79,88]},
+  'B': {aptNm:'DMC래미안e편한세상', lawdCd:'11440', area59:[56,62], area84:[79,88]},
+  'C': {aptNm:'마곡수명산파크3단지', lawdCd:'11500', area59:[56,62], area84:[79,88]},
+  'D': {aptNm:'창전동삼성', lawdCd:'11440', area59:[56,62], area84:[79,88]},
+  'E': {aptNm:'상도동중앙하이츠빌', lawdCd:'11590', area59:[56,62], area84:[79,88]},
+  'F': {aptNm:'신당동삼성', lawdCd:'11140', area59:[56,62], area84:[79,88]},
+  'G': {aptNm:'약수하이츠', lawdCd:'11140', area59:[56,62], area84:[79,88]},
+  'H': {aptNm:'상록', lawdCd:'11440', area59:[56,62], area84:[79,88]},
+  'I': {aptNm:'래미안에스티움', lawdCd:'11560', area59:[56,62], area84:[79,88]},
+  'J': {aptNm:'현대리버빌', lawdCd:'11710', area59:[56,62], area84:[79,88]},
+  'K': {aptNm:'한강극동', lawdCd:'11710', area59:[56,62], area84:[79,88]},
+  'L': {aptNm:'독립문극동', lawdCd:'11440', area59:[56,62], area84:[79,88]},
+  'M': {aptNm:'독립문삼호', lawdCd:'11440', area59:[56,62], area84:[79,88]},
+  'N': {aptNm:'무악현대', lawdCd:'11110', area59:[56,62], area84:[79,88]},
+  'O': {aptNm:'DMC파크뷰자이1단지', lawdCd:'11440', area59:[56,62], area84:[79,88]},
+  'P': {aptNm:'DMC센트럴자이', lawdCd:'11380', area59:[56,62], area84:[79,88]},
+};
+
+const MOLIT_KEY = '2ccefd3f8eae812cc96c2f87d8cae3295e40ff46059bd31135d9bd54ce5a8c46';
+const MOLIT_BASE = 'https://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev';
+
+function getRecentMonths(n) {
+  const months = [];
+  const now = new Date();
+  for (let i = 0; i < n; i++) {
+    let y = now.getFullYear(), m = now.getMonth() + 1 - i;
+    if (m <= 0) { m += 12; y--; }
+    months.push(y + String(m).padStart(2,'0'));
+  }
+  return months;
+}
+
+async function fetchAptTrades(lawdCd, dealYmd, aptNmKeyword) {
+  const params = new URLSearchParams({
+    serviceKey: MOLIT_KEY,
+    LAWD_CD: lawdCd,
+    DEAL_YMD: dealYmd,
+    pageNo: 1,
+    numOfRows: 100
+  });
+  const url = MOLIT_BASE + '?' + params;
+  try {
+    const res = await fetch(url);
+    const text = await res.text();
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(text, 'text/xml');
+    const items = [...xml.querySelectorAll('item')];
+    return items
+      .filter(item => (item.querySelector('aptNm')?.textContent||'').trim().includes(aptNmKeyword))
+      .map(item => ({
+        area:   parseFloat(item.querySelector('excluUseAr')?.textContent||0),
+        amount: parseInt((item.querySelector('dealAmount')?.textContent||'0').replace(/,/g,'')),
+        year:   item.querySelector('dealYear')?.textContent||'',
+        month:  item.querySelector('dealMonth')?.textContent||'',
+      }));
+  } catch(e) { return []; }
+}
+
+function formatPrice(amount, year, month) {
+  const uk = Math.floor(amount / 10000);
+  const chun = Math.round((amount % 10000) / 1000);
+  let str = uk > 0 ? uk + '억' : '';
+  if (chun > 0) str += chun + '천';
+  return str + ' (' + year + '.' + month + ')';
+}
+
+function getLatestPrice(trades, areaMin, areaMax) {
+  const filtered = trades
+    .filter(t => t.area >= areaMin && t.area <= areaMax && t.amount > 0)
+    .sort((a,b) => (b.year+b.month).localeCompare(a.year+a.month));
+  if (!filtered.length) return null;
+  const t = filtered[0];
+  return formatPrice(t.amount, t.year, t.month);
+}
+
+async function loadAllTradePrices() {
+  const months = getRecentMonths(5);
+  showToast('📊 실거래가 로딩 중...');
+  for (const [aptId, info] of Object.entries(APT_API_INFO)) {
+    let allTrades = [];
+    for (const ym of months) {
+      const trades = await fetchAptTrades(info.lawdCd, ym, info.aptNm);
+      allTrades = allTrades.concat(trades);
+      if (allTrades.length >= 3) break;
+    }
+    if (!allTrades.length) continue;
+    const p59 = getLatestPrice(allTrades, info.area59[0], info.area59[1]);
+    const p84 = getLatestPrice(allTrades, info.area84[0], info.area84[1]);
+    const card = document.getElementById('card-' + aptId);
+    if (!card) continue;
+    card.querySelectorAll('.p-block').forEach(block => {
+      const type = block.querySelector('.p-type')?.textContent || '';
+      const row = [...block.querySelectorAll('.p-row')].find(r =>
+        r.querySelector('span')?.textContent === '최근 실거래'
+      );
+      if (!row) return;
+      const valEl = row.querySelectorAll('span')[1];
+      if (!valEl) return;
+      if (type.includes('59') && p59) valEl.textContent = p59;
+      if (type.includes('84') && p84) valEl.textContent = p84;
+    });
+  }
+  showToast('✅ 실거래가 업데이트 완료 (국토교통부)');
+}
+
+setTimeout(loadAllTradePrices, 2000);
+
+
 init();
 
 // 네이버 SDK 로드 완료 후 지도 초기화
