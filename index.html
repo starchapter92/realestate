@@ -6,7 +6,6 @@
 <title>재원 & 희영 신혼집 찾기</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-<script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=x677ugzzwe&language=ko"></script>
 <style>
 :root{
   --bg:#F7F4EF;--white:#fff;--charcoal:#1A1A1A;--gray:#6B6560;
@@ -50,6 +49,7 @@ body{background:var(--bg);color:var(--charcoal);font-family:'Noto Sans KR',sans-
 /* apt image */
 .apt-img-wrap{position:relative;height:160px;overflow:hidden;background:#E0DBD4;}
 .apt-img{width:100%;height:160px;object-fit:cover;display:block;}
+.apt-img-placeholder{width:100%;height:160px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#EDE9E3,#E0DBD4);}
 .apt-img-overlay{position:absolute;bottom:0;left:0;right:0;height:64px;background:linear-gradient(transparent,rgba(0,0,0,.5));pointer-events:none;}
 .apt-img-label{position:absolute;bottom:10px;right:12px;font-size:9px;color:rgba(255,255,255,.7);letter-spacing:.3px;}
 .apt-kb-link{position:absolute;bottom:10px;left:12px;font-size:10px;color:rgba(255,255,255,.9);background:rgba(0,0,0,.35);padding:3px 8px;border-radius:100px;text-decoration:none;transition:background .15s;}
@@ -183,6 +183,7 @@ const APTS = [
   {
     id:'A', name:'목동센트럴아이파크위브', gu:'양천구', year:2020, units:3045,
     lat:37.5267, lng:126.8651,
+    img:'https://landthumb-phinf.pstatic.net/20211115_283/land_naver_1636937777133kSORH_JPEG/e3ae96fdcc32c470c9c173424ed48a44.JPG?type=m1024', // ← 네이버 부동산 이미지 URL 붙여넣기
     kbUrl:'https://kbland.kr/se/c/37625',
     station:'신정네거리역 (2호선) 도보 14분',
     school:{name:'서울신남초', achievement:'중상', note:'단지 내 위치·초품아'},
@@ -213,6 +214,7 @@ const APTS = [
   {
     id:'B', name:'DMC래미안e편한세상', gu:'서대문구', year:2012, units:3293,
     lat:37.5709, lng:126.9089,
+    img:'',
     kbUrl:'https://kbland.kr/se/c/44510',
     station:'가좌역 (경의중앙선) 도보 5분',
     school:{name:'북가좌초', achievement:'중상', note:'도보 10분'},
@@ -243,6 +245,7 @@ const APTS = [
   {
     id:'C', name:'마곡수명산파크3단지', gu:'강서구', year:2009, units:846,
     lat:37.5539, lng:126.8400,
+    img:'',
     kbUrl:'https://kbland.kr/se/c/15208',
     station:'발산역 (5호선) 도보 12분',
     school:{name:'내발산초', achievement:'중', note:'도보 8분·초품아'},
@@ -273,6 +276,7 @@ const APTS = [
   {
     id:'D', name:'창전삼성래미안', gu:'마포구', year:2002, units:553,
     lat:37.5519, lng:126.9228,
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     kbUrl:'https://kbland.kr/se/c/1383',
     station:'홍대입구역 (2호선·공항철도) 도보 10분',
     school:{name:'서울창전초', achievement:'중상', note:'도보 5분'},
@@ -303,6 +307,7 @@ const APTS = [
   {
     id:'E', name:'상도하이츠빌', gu:'동작구', year:2003, units:888,
     lat:37.5014, lng:126.9389,
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     kbUrl:'https://kbland.kr/se/c/5678',
     station:'장승배기역 (7호선) 도보 5분',
     school:{name:'서울상도초', achievement:'중', note:'도보 8분'},
@@ -333,6 +338,7 @@ const APTS = [
   {
     id:'F', name:'신당삼성', gu:'중구', year:1999, units:664,
     lat:37.5649, lng:127.0196,
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     kbUrl:'https://kbland.kr/se/c/420',
     station:'신당역 (2·6호선) 도보 5분',
     school:{name:'서울약수초', achievement:'중상', note:'도보 7분'},
@@ -363,6 +369,7 @@ const APTS = [
   {
     id:'G', name:'동아약수하이츠', gu:'중구', year:1996, units:598,
     lat:37.5577, lng:127.0161,
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     kbUrl:'https://kbland.kr/se/c/1001',
     station:'약수역 (3·6호선) 도보 5분',
     school:{name:'서울약수초', achievement:'중상', note:'도보 10분'},
@@ -393,6 +400,7 @@ const APTS = [
   {
     id:'H', name:'염리동상록', gu:'마포구', year:1999, units:690,
     lat:37.5497, lng:126.9572,
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     kbUrl:'https://kbland.kr/se/c/1380',
     station:'애오개역 (5호선) 도보 5분',
     school:{name:'서울염리초', achievement:'중상', note:'도보 7분'},
@@ -423,6 +431,7 @@ const APTS = [
   {
     id:'I', name:'래미안에스티움', gu:'영등포구', year:2017, units:1722,
     lat:37.5082, lng:126.9198,
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     kbUrl:'https://kbland.kr/se/c/30180',
     station:'신풍역 (7호선) 도보 7분',
     school:{name:'대방초', achievement:'중', note:'도보 10분'},
@@ -453,6 +462,7 @@ const APTS = [
   {
     id:'J', name:'현대리버빌1지구', gu:'마포구', year:2000, units:712,
     lat:37.5499, lng:126.9129,
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     kbUrl:'https://kbland.kr/se/c/1391',
     station:'합정역 (2·6호선) 도보 5분',
     school:{name:'서울합정초', achievement:'중상', note:'도보 8분'},
@@ -483,6 +493,7 @@ const APTS = [
   {
     id:'K', name:'한강극동', gu:'마포구', year:1995, units:549,
     lat:37.5479, lng:126.9098,
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     kbUrl:'https://kbland.kr/se/c/1392',
     station:'합정역 (2·6호선) 도보 8분',
     school:{name:'서울합정초', achievement:'중상', note:'도보 12분'},
@@ -513,6 +524,7 @@ const APTS = [
   {
     id:'L', name:'독립문극동아파트', gu:'서대문구', year:1994, units:804,
     lat:37.5757, lng:126.9641,
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     kbUrl:'https://kbland.kr/se/c/1401',
     station:'독립문역 (3호선) 도보 3분',
     school:{name:'서울금화초', achievement:'중', note:'도보 8분'},
@@ -543,6 +555,7 @@ const APTS = [
   {
     id:'M', name:'독립문삼호아파트', gu:'서대문구', year:1987, units:532,
     lat:37.5769, lng:126.9620,
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     kbUrl:'https://kbland.kr/se/c/1402',
     station:'독립문역 (3호선) 도보 5분',
     school:{name:'서울금화초', achievement:'중', note:'도보 10분'},
@@ -573,6 +586,7 @@ const APTS = [
   {
     id:'N', name:'무악현대아파트', gu:'종로구', year:1999, units:628,
     lat:37.5789, lng:126.9599,
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     kbUrl:'https://kbland.kr/se/c/1403',
     station:'독립문역 (3호선) 도보 5분',
     school:{name:'서울교동초', achievement:'중상', note:'도보 10분'},
@@ -603,6 +617,7 @@ const APTS = [
   {
     id:'O', name:'DMC파크뷰자이1단지', gu:'서대문구', year:2015, units:2280,
     lat:37.5689, lng:126.9139,
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     kbUrl:'https://kbland.kr/se/c/28216',
     station:'가좌역 (경의중앙선) 도보 10분',
     school:{name:'가재울초', achievement:'중상', note:'단지 내 위치·초품아'},
@@ -633,6 +648,7 @@ const APTS = [
   {
     id:'P', name:'DMC센트럴자이', gu:'은평구', year:2022, units:1464,
     lat:37.5779, lng:126.9079,
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     kbUrl:'https://kbland.kr/se/c/324604',
     station:'디지털미디어시티역 (6호선·공항철도·경의중앙선) 도보 5분',
     school:{name:'증산초', achievement:'중', note:'도보 8분'},
@@ -788,13 +804,19 @@ function buildCard(apt, num) {
 
   d.innerHTML=`
     <div class="apt-img-wrap">
-      <img class="apt-img"
-        src="https://maps.googleapis.com/maps/api/streetview?size=800x200&location=${apt.lat},${apt.lng}&fov=80&heading=180&pitch=5&key=AIzaSyCLSI6dx7f9m3s8mjVSoTKHtkYDJbOJs5o"
-        onerror="this.onerror=null;this.src='https://via.placeholder.com/800x200/E0DBD4/9E9890?text=${encodeURIComponent(apt.name)}'"
-        alt="${apt.name}" loading="lazy">
+      ${apt.img
+        ? `<img class="apt-img" src="${apt.img}" onerror="this.onerror=null;this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${apt.name}" loading="lazy">
+           <div class="apt-img-placeholder" style="display:none">`
+        : `<div class="apt-img-placeholder" style="display:flex">`
+      }
+        <div style="text-align:center">
+          <div style="font-size:28px;margin-bottom:8px;">🏢</div>
+          <div style="font-size:12px;font-weight:600;color:#6B6560;">${apt.name}</div>
+          <div style="font-size:10px;color:#aaa;margin-top:4px;">이미지 URL을 img 필드에 입력하세요</div>
+        </div>
+      </div>
       <div class="apt-img-overlay"></div>
       <a class="apt-kb-link" href="${apt.kbUrl}" target="_blank">KB부동산 보기 →</a>
-      <div class="apt-img-label">이미지: Google Street View</div>
     </div>
 
     <div class="c-head">
@@ -945,10 +967,12 @@ function init(){
 init();
 
 // ═══════════════════════════════════════════════════════
-// 네이버 지도
+// 네이버 지도 — SDK &callback=initMap 으로 자동 호출됨
 // ═══════════════════════════════════════════════════════
 function initMap(){
-  if(typeof naver==='undefined'||typeof naver.maps==='undefined'){document.getElementById('map-fallback').style.display='flex';return;}
+  if(typeof naver==='undefined'||typeof naver.maps==='undefined'){
+    document.getElementById('map-fallback').style.display='flex';return;
+  }
   const bounds=new naver.maps.LatLngBounds();
   APTS.forEach(a=>bounds.extend(new naver.maps.LatLng(a.lat,a.lng)));
   const map=new naver.maps.Map('naver-map',{bounds,mapTypeControl:false,scaleControl:false,logoControl:true,mapDataControl:false});
@@ -966,7 +990,7 @@ function initMap(){
     naver.maps.Event.addListener(marker,'click',()=>{iws.forEach((w,j)=>{if(j!==i)w.close();});iw.getMap()?iw.close():iw.open(map,marker);});
   });
 }
-window.addEventListener('load',initMap);
 </script>
+<script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=x677ugzzwe&language=ko&callback=initMap"></script>
 </body>
 </html>
