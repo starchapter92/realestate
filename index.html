@@ -202,6 +202,10 @@ textarea.cm-input::placeholder{color:#c5c0ba;}
 <div class="map-wrap">
   <div class="map-title">🏠 신혼집 후보 단지 16곳</div>
   <div id="naver-map"></div>
+  <div class="map-fallback" id="map-fallback">
+    <strong>⚠️ 지도 로드 실패</strong>
+    <p>HTML에서 <code>YOUR_CLIENT_ID</code>를 네이버 클라우드 Client ID로 교체하세요</p>
+  </div>
 </div>
 
 <!-- 매물 호가 입력 모달 -->
@@ -1231,8 +1235,16 @@ document.addEventListener('keydown', e => {
 });
 
 // ═══════════════════════════════════════════════════════
-// 네이버 지도 — SDK &callback=initMap 으로 자동 호출됨
+// 네이버 지도
 // ═══════════════════════════════════════════════════════
+
+// 공식 인증 실패 콜백 — 도메인 미등록 시 자동 호출됨
+window.navermap_authFailure = function() {
+  const fb = document.getElementById('map-fallback');
+  fb.style.display = 'flex';
+  fb.innerHTML = '<div style="text-align:center"><strong>⚠️ 네이버 지도 인증 실패</strong><p style="margin-top:8px;font-size:12px;color:#666;">네이버 클라우드 콘솔 → Application → Web 서비스 URL에<br>현재 접속 도메인을 등록해주세요.</p></div>';
+};
+
 function initMap(){
   if(typeof naver==='undefined'||typeof naver.maps==='undefined'){
     document.getElementById('map-fallback').style.display='flex';return;
@@ -1255,7 +1267,7 @@ function initMap(){
   });
 }
 </script>
-<script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=hncjmkc4p1&language=ko"></script>
+<script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=hncjmkc4p1&language=ko"></script>
 <script>
 // ═══════════════════════════════════════════════════════
 // Firebase 초기화 & 실시간 동기화
