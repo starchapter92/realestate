@@ -123,7 +123,17 @@ body{background:var(--bg);color:var(--charcoal);font-family:'Noto Sans KR',sans-
 .c-commute{border-bottom:1px solid var(--border);padding:14px 14px;}
 .ct-title-main{font-size:12px;font-weight:600;color:var(--charcoal);margin-bottom:2px;}
 .ct-title-sub{font-size:10px;color:var(--gray);font-weight:300;margin-left:6px;}
-.ct-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}
+
+/* commute tabs v2 */
+.ct-tabs2{display:flex;gap:6px;margin-bottom:8px;}
+.ct-tab2{flex:1;padding:7px 0;font-size:11px;font-weight:500;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--gray);cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .15s;}
+.ct-tab2.on{background:var(--charcoal);color:#fff;border-color:var(--charcoal);}
+.ct-sub{font-size:10px;color:var(--gray);margin-bottom:8px;}
+.ct-panel2{display:none;}
+.ct-panel2.on{display:block;}
+
+.ct-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.ct-grid4{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
 .ct3-item{background:var(--bg);border-radius:9px;padding:10px 11px;}
 .ct3-dest{font-size:13px;font-weight:700;color:var(--charcoal);margin-bottom:7px;letter-spacing:-.2px;}
 .ct3-rows{display:flex;flex-direction:column;gap:5px;}
@@ -133,8 +143,12 @@ body{background:var(--bg);color:var(--charcoal);font-family:'Noto Sans KR',sans-
 .ct3-car{font-size:12px;font-weight:700;color:var(--green);}
 .ct3-sep{font-size:10px;color:#ccc;}
 
+/* section titles */
+.section-title{font-size:11px;font-weight:600;color:var(--charcoal);letter-spacing:.3px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+
 @media(max-width:480px){
   .ct-grid3{grid-template-columns:1fr;}
+  .ct-grid4{grid-template-columns:1fr 1fr;}
   .ct3-dest{font-size:12px;}
   .ct3-bus,.ct3-car{font-size:11px;}
 }
@@ -187,6 +201,19 @@ textarea.cm-input{width:100%;border:1px solid var(--border);border-radius:6px;pa
 textarea.cm-input:focus{border-color:var(--accent);background:#fff;}
 textarea.cm-input::placeholder{color:#c5c0ba;}
 
+
+/* 구별 그룹 헤더 */
+.gu-group{margin-bottom:28px;}
+.gu-header{display:flex;align-items:center;gap:10px;padding:10px 4px;margin-bottom:12px;border-bottom:2px solid var(--charcoal);}
+.gu-badge{background:var(--charcoal);color:#fff;font-size:10px;font-weight:600;padding:3px 10px;border-radius:100px;letter-spacing:.4px;white-space:nowrap;}
+.gu-name{font-size:15px;font-weight:700;color:var(--charcoal);font-family:'Noto Serif KR',serif;}
+.gu-count{font-size:11px;color:var(--gray);margin-left:auto;}
+.gu-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;}
+@media(max-width:640px){
+  .gu-cards{grid-template-columns:1fr;}
+  .gu-header{padding:8px 2px;}
+  .gu-name{font-size:14px;}
+}
 @media(max-width:640px){
   .c-info{grid-template-columns:1fr 1fr;}
   .ct-grid,.ct-grid-wide{grid-template-columns:1fr 1fr;}
@@ -594,79 +621,81 @@ const APTS = [
     }
   },
   {
-    id:'J', name:'현대리버빌1지구', gu:'마포구', year:2000, units:712,
-    lat:37.5499, lng:126.9129,
+      {
+    id:'J', name:'현대리버빌1지구', gu:'송파구', year:2000, units:557,
+    lat:37.5447, lng:127.1243,
     img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     horae:[
-      {icon:'🏘️', name:'염리동 재개발 정비구역 지정', tag:'redev', desc:'2025년 8월 10년 정체 끝 도시계획위원회 통과, 역세권 재개발 본격화'},
-      {icon:'🏗️', name:'마포 신수·공덕 일대 고도화', tag:'dev', desc:'공덕역 인근 업무·주거 복합개발 지속, 역세권 가치 상승'},
-      {icon:'🚇', name:'5호선 역세권 + 공덕 환승 근접', tag:'rail', desc:'공덕역 5·6·경의중앙·공항철도 4개 노선 도보권 접근'},
+      {icon:'🏛️', name:'풍납토성 역사문화지구 정비', tag:'infra', desc:'풍납토성 주변 정비사업 지속, 한강·토성 접한 역사문화 프리미엄 유지'},
+      {icon:'🏗️', name:'풍납동 재건축 기대감', tag:'redev', desc:'문화재청 재건축 허가 사례(미성아파트 등) 선례로 단지 가치 재평가 가능성'},
+      {icon:'🚇', name:'9호선 한성백제역 도보권', tag:'rail', desc:'한성백제역(9호선) 도보 10분, 강남·여의도 급행 직결 교통 수혜'},
     ],
     kbUrl:'https://kbland.kr/se/c/1877',
-    station:'합정역 (2·6호선) 도보 5분',
-    school:{name:'서울합정초', achievement:'중상', note:'도보 8분'},
-    p59:{r:'12.5억', l:'12.0억'}, p84:{r:'15.5억', l:'15.0억'},
+    station:'한성백제역 (9호선) 도보 10분',
+    school:{name:'서울토성초', achievement:'중', note:'도보 8분'},
+    p59:{r:'12.5억', l:''}, p84:{r:'16.0억', l:''},
     listing59:{min:'', max:'', count:''},
     listing84:{min:'', max:'', count:''},
     cm:{
       work:[
-        {dest:'여의도',    am:{tr:'40분',ca:'25분'}, pm:{tr:'48분',ca:'32분'}},
-        {dest:'광화문',    am:{tr:'30분',ca:'20분'}, pm:{tr:'38분',ca:'27분'}},
-        {dest:'강남역',    am:{tr:'45분',ca:'28분'}, pm:{tr:'53분',ca:'35분'}},
-        {dest:'삼성역',    am:{tr:'50분',ca:'32분'}, pm:{tr:'58분',ca:'40분'}},
-        {dest:'양재역',    am:{tr:'52분',ca:'34분'}, pm:{tr:'60분',ca:'42분'}},
-        {dest:'판교',      am:{tr:'70분',ca:'47분'}, pm:{tr:'78분',ca:'55분'}},
+        {dest:'여의도',    am:{tr:'38분',ca:'22분'}, pm:{tr:'46분',ca:'30분'}},
+        {dest:'광화문',    am:{tr:'45분',ca:'30분'}, pm:{tr:'53분',ca:'38분'}},
+        {dest:'강남역',    am:{tr:'32분',ca:'20분'}, pm:{tr:'40분',ca:'28분'}},
+        {dest:'삼성역',    am:{tr:'28분',ca:'17분'}, pm:{tr:'35분',ca:'23분'}},
+        {dest:'양재역',    am:{tr:'38분',ca:'24분'}, pm:{tr:'46분',ca:'31분'}},
+        {dest:'판교',      am:{tr:'55분',ca:'35분'}, pm:{tr:'63분',ca:'43분'}},
       ],
       hub:[
-        {dest:'서울역',    am:{tr:'22분',ca:'14분'}, pm:{tr:'29분',ca:'18분'}},
-        {dest:'수서역',    am:{tr:'60분',ca:'42분'}, pm:{tr:'68분',ca:'50분'}},
-        {dest:'인천공항',  am:{tr:'48분',ca:'33분'}, pm:{tr:'56분',ca:'40분'}},
-        {dest:'김포공항',  am:{tr:'35분',ca:'22분'}, pm:{tr:'43분',ca:'28분'}},
-        {dest:'경부고속',  am:{tr:'-',   ca:'25분'}, pm:{tr:'-',   ca:'32분'}},
+        {dest:'서울역',    am:{tr:'45분',ca:'28분'}, pm:{tr:'53분',ca:'35분'}},
+        {dest:'수서역',    am:{tr:'25분',ca:'15분'}, pm:{tr:'32분',ca:'20분'}},
+        {dest:'인천공항',  am:{tr:'65분',ca:'45분'}, pm:{tr:'73분',ca:'53분'}},
+        {dest:'김포공항',  am:{tr:'55분',ca:'38분'}, pm:{tr:'63분',ca:'46분'}},
+        {dest:'경부고속',  am:{tr:'-',   ca:'18분'}, pm:{tr:'-',   ca:'24분'}},
       ]
     },
     infra:{
-      mart:{name:'홈플러스 합정점', dist:'0.8km', car:'3분'},
-      dept:{name:'현대백화점 신촌점', dist:'2.2km', car:'7분'},
-      hosp:{name:'신촌세브란스병원', dist:'3.0km', car:'10분'},
+      mart:{name:'이마트 성내점', dist:'1.5km', car:'6분'},
+      dept:{name:'롯데백화점 잠실점', dist:'4.5km', car:'15분'},
+      hosp:{name:'서울아산병원', dist:'0.8km', car:'3분'},
     }
   },
   {
-    id:'K', name:'한강극동', gu:'마포구', year:1995, units:549,
-    lat:37.5479, lng:126.9098,
+      {
+    id:'K', name:'한강극동', gu:'송파구', year:1995, units:895,
+    lat:37.5432, lng:127.1201,
     img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     horae:[
-      {icon:'🏘️', name:'신길뉴타운 추가 구역 개발', tag:'redev', desc:'신길뉴타운 잔여 구역 정비사업 진행, 주거 환경 지속 개선'},
-      {icon:'🏗️', name:'보라매 도시재생사업', tag:'dev', desc:'보라매공원 인근 도시재생 활성화 구역, 공공시설 확충'},
-      {icon:'🚇', name:'서부선 경전철 신풍역 연계', tag:'rail', desc:'서부선 개통 시 강남~강서 직결, 교통 접근성 획기적 개선 기대'},
+      {icon:'🌊', name:'한강변 조망·한강공원 도보권', tag:'infra', desc:'한강극동 단지 북측 한강공원 도보 5분, 리버뷰 세대 프리미엄'},
+      {icon:'🏛️', name:'풍납토성 재건축 규제 완화 흐름', tag:'redev', desc:'인근 미성아파트 재건축 허가 선례, 풍납동 일대 재건축 기대감 상승'},
+      {icon:'🏗️', name:'잠실·강동 광역개발 수혜', tag:'dev', desc:'잠실 MICE 복합단지, 강동구 고덕강일 개발로 인근 인프라·상권 강화'},
     ],
     kbUrl:'https://kbland.kr/se/c/1865',
-    station:'합정역 (2·6호선) 도보 8분',
-    school:{name:'서울합정초', achievement:'중상', note:'도보 12분'},
-    p59:{r:'11.5억', l:'11.0억'}, p84:{r:'14.5억', l:'14.0억'},
+    station:'한성백제역 (9호선) 도보 8분',
+    school:{name:'서울풍납초', achievement:'중', note:'도보 6분'},
+    p59:{r:'11.0억', l:''}, p84:{r:'14.5억', l:''},
     listing59:{min:'', max:'', count:''},
     listing84:{min:'', max:'', count:''},
     cm:{
       work:[
-        {dest:'여의도',    am:{tr:'42분',ca:'26분'}, pm:{tr:'50분',ca:'33분'}},
-        {dest:'광화문',    am:{tr:'32분',ca:'22분'}, pm:{tr:'40분',ca:'29분'}},
-        {dest:'강남역',    am:{tr:'47분',ca:'30분'}, pm:{tr:'55분',ca:'37분'}},
-        {dest:'삼성역',    am:{tr:'52분',ca:'34분'}, pm:{tr:'60분',ca:'42분'}},
-        {dest:'양재역',    am:{tr:'54분',ca:'36분'}, pm:{tr:'62분',ca:'44분'}},
-        {dest:'판교',      am:{tr:'72분',ca:'49분'}, pm:{tr:'80분',ca:'57분'}},
+        {dest:'여의도',    am:{tr:'40분',ca:'24분'}, pm:{tr:'48분',ca:'32분'}},
+        {dest:'광화문',    am:{tr:'47분',ca:'32분'}, pm:{tr:'55분',ca:'40분'}},
+        {dest:'강남역',    am:{tr:'30분',ca:'18분'}, pm:{tr:'38분',ca:'25분'}},
+        {dest:'삼성역',    am:{tr:'26분',ca:'15분'}, pm:{tr:'33분',ca:'21분'}},
+        {dest:'양재역',    am:{tr:'36분',ca:'22분'}, pm:{tr:'44분',ca:'29분'}},
+        {dest:'판교',      am:{tr:'53분',ca:'33분'}, pm:{tr:'61분',ca:'41분'}},
       ],
       hub:[
-        {dest:'서울역',    am:{tr:'24분',ca:'15분'}, pm:{tr:'31분',ca:'20분'}},
-        {dest:'수서역',    am:{tr:'62분',ca:'44분'}, pm:{tr:'70분',ca:'52분'}},
-        {dest:'인천공항',  am:{tr:'50분',ca:'35분'}, pm:{tr:'58분',ca:'42분'}},
-        {dest:'김포공항',  am:{tr:'37분',ca:'24분'}, pm:{tr:'45분',ca:'30분'}},
-        {dest:'경부고속',  am:{tr:'-',   ca:'27분'}, pm:{tr:'-',   ca:'34분'}},
+        {dest:'서울역',    am:{tr:'47분',ca:'30분'}, pm:{tr:'55분',ca:'38분'}},
+        {dest:'수서역',    am:{tr:'22분',ca:'13분'}, pm:{tr:'29분',ca:'18분'}},
+        {dest:'인천공항',  am:{tr:'67분',ca:'47분'}, pm:{tr:'75분',ca:'55분'}},
+        {dest:'김포공항',  am:{tr:'57분',ca:'40분'}, pm:{tr:'65분',ca:'48분'}},
+        {dest:'경부고속',  am:{tr:'-',   ca:'16분'}, pm:{tr:'-',   ca:'22분'}},
       ]
     },
     infra:{
-      mart:{name:'홈플러스 합정점', dist:'1.2km', car:'4분'},
-      dept:{name:'현대백화점 신촌점', dist:'2.5km', car:'8분'},
-      hosp:{name:'신촌세브란스병원', dist:'3.3km', car:'11분'},
+      mart:{name:'이마트 성내점', dist:'1.8km', car:'7분'},
+      dept:{name:'롯데백화점 잠실점', dist:'4.2km', car:'14분'},
+      hosp:{name:'서울아산병원', dist:'1.1km', car:'4분'},
     }
   },
   {
@@ -1003,7 +1032,7 @@ function buildCard(apt, num) {
     </div>
 
     <div class="c-head">
-      <div class="c-idx" id="idx-${apt.id}">${num}</div>
+      <div class="c-idx no-rank" id="idx-${apt.id}"></div>
       <div>
         <div class="c-name">${apt.name}</div>
         <div class="c-loc">${apt.gu}</div>
@@ -1054,30 +1083,40 @@ function buildCard(apt, num) {
     </div>
 
     <div class="c-commute">
-      <div class="ct-title-main">📍 출퇴근 소요시간 <span class="ct-title-sub">오전 8시 출근 / 오후 6시 퇴근</span></div>
-      <div class="ct-grid3">
-        ${[
-          {dest:'여의도', am:apt.cm.work[0].am, pm:apt.cm.work[0].pm},
-          {dest:'강남역',  am:apt.cm.work[2].am, pm:apt.cm.work[2].pm},
-          {dest:'판교',    am:apt.cm.work[5].am, pm:apt.cm.work[5].pm},
-        ].map(r=>`
-        <div class="ct3-item">
-          <div class="ct3-dest">${r.dest}</div>
-          <div class="ct3-rows">
-            <div class="ct3-row">
-              <span class="ct3-label">출근</span>
-              <span class="ct3-bus">🚌 ${r.am.tr}</span>
-              <span class="ct3-sep">·</span>
-              <span class="ct3-car">🚗 ${r.am.ca}</span>
+      <div class="ct-tabs2">
+        <button class="ct-tab2 on" onclick="switchCommute(this,'work-${apt.id}','${apt.id}')">📍 출퇴근</button>
+        <button class="ct-tab2" onclick="switchCommute(this,'hub-${apt.id}','${apt.id}')">🚄 교통 허브</button>
+      </div>
+      <div class="ct-sub">오전 8시 출근 / 오후 6시 퇴근 기준</div>
+
+      <div class="ct-panel2 on" id="work-${apt.id}">
+        <div class="ct-grid3">
+          ${[
+            {dest:'여의도', am:apt.cm.work[0].am, pm:apt.cm.work[0].pm},
+            {dest:'강남역',  am:apt.cm.work[2].am, pm:apt.cm.work[2].pm},
+            {dest:'판교',    am:apt.cm.work[5].am, pm:apt.cm.work[5].pm},
+          ].map(r=>`
+          <div class="ct3-item">
+            <div class="ct3-dest">${r.dest}</div>
+            <div class="ct3-rows">
+              <div class="ct3-row"><span class="ct3-label">출근</span><span class="ct3-bus">🚌 ${r.am.tr}</span><span class="ct3-sep">·</span><span class="ct3-car">🚗 ${r.am.ca}</span></div>
+              <div class="ct3-row"><span class="ct3-label">퇴근</span><span class="ct3-bus">🚌 ${r.pm.tr}</span><span class="ct3-sep">·</span><span class="ct3-car">🚗 ${r.pm.ca}</span></div>
             </div>
-            <div class="ct3-row">
-              <span class="ct3-label">퇴근</span>
-              <span class="ct3-bus">🚌 ${r.pm.tr}</span>
-              <span class="ct3-sep">·</span>
-              <span class="ct3-car">🚗 ${r.pm.ca}</span>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <div class="ct-panel2" id="hub-${apt.id}">
+        <div class="ct-grid4">
+          ${apt.cm.hub.slice(0,4).map(r=>`
+          <div class="ct3-item">
+            <div class="ct3-dest">${r.dest}</div>
+            <div class="ct3-rows">
+              <div class="ct3-row"><span class="ct3-label">출근</span>${r.am.tr!=='-'?`<span class="ct3-bus">🚌 ${r.am.tr}</span><span class="ct3-sep">·</span>`:''}<span class="ct3-car">🚗 ${r.am.ca}</span></div>
+              <div class="ct3-row"><span class="ct3-label">퇴근</span>${r.pm.tr!=='-'?`<span class="ct3-bus">🚌 ${r.pm.tr}</span><span class="ct3-sep">·</span>`:''}<span class="ct3-car">🚗 ${r.pm.ca}</span></div>
             </div>
-          </div>
-        </div>`).join('')}
+          </div>`).join('')}
+        </div>
       </div>
     </div>
 
@@ -1120,6 +1159,7 @@ function buildCard(apt, num) {
     </div>
 
     <div class="c-rating">
+      <div class="section-title">⭐ 임장 후 평가</div>
       <div class="r-row">
         <span class="r-who">재원</span>
         <div class="stars" id="s-${apt.id}-jw"></div>
@@ -1139,13 +1179,24 @@ function buildCard(apt, num) {
     </div>
 
     <div class="c-comment">
-      <div class="cm-lbl">한줄평</div>
+      <div class="cm-lbl">✏️ 임장 후 한줄평</div>
       <div class="cm-grid">
         <div class="cm-wrap"><span class="cm-who">재원</span><textarea class="cm-input" rows="2" placeholder="한줄평 입력..."></textarea></div>
         <div class="cm-wrap"><span class="cm-who">희영</span><textarea class="cm-input" rows="2" placeholder="한줄평 입력..."></textarea></div>
       </div>
     </div>`;
   return d;
+}
+
+// ═══════════════════════════════════════════════════════
+// 출퇴근 탭 전환
+// ═══════════════════════════════════════════════════════
+function switchCommute(btn, panelId, aptId) {
+  const card = document.getElementById(`card-${aptId}`);
+  card.querySelectorAll('.ct-tab2').forEach(t => t.classList.remove('on'));
+  card.querySelectorAll('.ct-panel2').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById(panelId).classList.add('on');
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1162,7 +1213,16 @@ function sortCards(type, updBtn=true){
   order.forEach((apt,i)=>{
     const c=document.getElementById(`card-${apt.id}`);
     const ix=c.querySelector(`#idx-${apt.id}`);
-    if(ix) ix.textContent=i+1;
+    if(ix){
+      const avg=getAvg(apt.id);
+      if(avg){
+        ix.textContent=i+1;
+        ix.classList.remove('no-rank');
+      } else {
+        ix.textContent='';
+        ix.classList.add('no-rank');
+      }
+    }
     wrap.appendChild(c);
   });
 }
@@ -1267,7 +1327,7 @@ function initMap(){
   });
 }
 </script>
-<script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=hncjmkc4p1&language=ko"></script>
+<script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=Yhncjmkc4p1&language=ko"></script>
 <script>
 // ═══════════════════════════════════════════════════════
 // Firebase 초기화 & 실시간 동기화
@@ -1348,9 +1408,61 @@ function showToast(msg) {
   t._timer = setTimeout(() => t.style.opacity = '0', 2000);
 }
 
+// 구별 색상 매핑
+const GU_COLORS = {
+  '마포구':   {bg:'#EBF4FF', border:'#2B6CB0'},
+  '서대문구': {bg:'#F0FFF4', border:'#276749'},
+  '중구':     {bg:'#FFFFF0', border:'#C05621'},
+  '영등포구': {bg:'#FFF5F5', border:'#C53030'},
+  '동작구':   {bg:'#FAF5FF', border:'#6B46C1'},
+  '양천구':   {bg:'#FFFAF0', border:'#C05621'},
+  '강서구':   {bg:'#E6FFFA', border:'#2C7A7B'},
+  '종로구':   {bg:'#FFF5F7', border:'#97266D'},
+  '은평구':   {bg:'#F7FAFC', border:'#2C5282'},
+  '송파구':   {bg:'#FFF0F5', border:'#B83280'},
+};
+
+// 구 순서 (지리적으로 자연스럽게)
+const GU_ORDER = ['마포구','서대문구','은평구','종로구','중구','영등포구','동작구','양천구','강서구','송파구'];
+
 function init(){
-  const wrap=document.getElementById('cards');
-  APTS.forEach((apt,i)=>{wrap.appendChild(buildCard(apt,i+1));});
+  const wrap = document.getElementById('cards');
+  wrap.innerHTML = '';
+
+  // 구별 그룹핑
+  const byGu = {};
+  APTS.forEach(apt => {
+    if (!byGu[apt.gu]) byGu[apt.gu] = [];
+    byGu[apt.gu].push(apt);
+  });
+
+  // 구 순서대로 렌더
+  const guList = GU_ORDER.filter(g => byGu[g]).concat(Object.keys(byGu).filter(g => !GU_ORDER.includes(g)));
+  guList.forEach(gu => {
+    const apts = byGu[gu];
+    const color = GU_COLORS[gu] || {bg:'#F7F4EF', border:'#6B6560'};
+
+    const section = document.createElement('div');
+    section.className = 'gu-group';
+    section.id = `gu-${gu}`;
+    section.style.cssText = `background:${color.bg};border:1.5px solid ${color.border};border-radius:14px;padding:14px;`;
+
+    section.innerHTML = `
+      <div class="gu-header" style="border-bottom-color:${color.border}">
+        <span class="gu-badge" style="background:${color.border}">${gu}</span>
+        <span class="gu-name">${gu} 후보 단지</span>
+        <span class="gu-count">${apts.length}개 단지</span>
+      </div>
+      <div class="gu-cards" id="gu-cards-${gu}"></div>
+    `;
+    wrap.appendChild(section);
+
+    const cardWrap = section.querySelector(`#gu-cards-${gu}`);
+    apts.forEach((apt, i) => {
+      cardWrap.appendChild(buildCard(apt, i + 1));
+    });
+  });
+
   APTS.forEach(apt=>{
     initStars(document.getElementById(`s-${apt.id}-jw`),apt.id,'jw');
     initStars(document.getElementById(`s-${apt.id}-hy`),apt.id,'hy');
