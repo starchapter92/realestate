@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>재원 & 희영 신혼집 찾기</title>
+<title> 재원 & 희영 신혼집 찾기</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -88,25 +88,56 @@ body{background:var(--bg);color:var(--charcoal);font-family:'Noto Sans KR',sans-
 .p-row span:first-child{color:var(--gray);}
 .p-low{color:var(--blue);font-weight:600;}
 
-/* commute — 2 panels */
-.c-commute{border-bottom:1px solid var(--border);}
-.commute-tabs{display:flex;border-bottom:1px solid var(--border);}
-.ctab{flex:1;padding:7px 0;font-size:10px;text-align:center;cursor:pointer;color:var(--gray);background:var(--bg);border-right:1px solid var(--border);transition:all .15s;}
-.ctab:last-child{border-right:none;}
-.ctab.on{background:#fff;color:var(--charcoal);font-weight:600;}
-.commute-panel{display:none;padding:11px 13px;}
-.commute-panel.on{display:block;}
-.ct-title{font-size:9px;color:var(--gray);letter-spacing:.4px;margin-bottom:8px;font-weight:500;}
-.ct-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
-.ct-grid-wide{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
-.ct-item{background:var(--bg);border-radius:7px;padding:7px 9px;}
-.ct-dest{font-size:9px;font-weight:600;color:var(--charcoal);margin-bottom:4px;}
-.ct-rows{display:flex;flex-direction:column;gap:3px;}
-.ct-row{display:flex;align-items:center;gap:3px;font-size:10px;}
-.ct-row-lbl{color:var(--gray);width:22px;font-size:9px;flex-shrink:0;}
-.t-bus{color:var(--blue);font-weight:600;}
-.t-car{color:var(--green);font-weight:600;}
-.ct-dot{color:#ddd;font-size:9px;}
+/* price check link */
+.p-check a{color:var(--blue);font-size:11px;font-weight:600;text-decoration:none;}
+.p-check a:hover{text-decoration:underline;}
+
+/* listing badges */
+.p-row-listing{align-items:center;}
+.listing-badges{display:flex;align-items:center;gap:3px;flex-wrap:wrap;}
+.l-min,.l-max{font-size:12px;font-weight:700;color:var(--blue);}
+.l-wave{font-size:11px;color:var(--gray);}
+.l-count{font-size:10px;color:var(--gray);background:var(--border);padding:1px 6px;border-radius:100px;margin-left:2px;}
+.l-empty{font-size:11px;color:var(--blue);cursor:pointer;border:1px dashed var(--blue);padding:1px 8px;border-radius:100px;opacity:.7;transition:opacity .15s;}
+.l-empty:hover{opacity:1;}
+.listing-badges:not(.has-data){cursor:pointer;}
+.listing-edit-btn{font-size:10px;color:var(--gray);cursor:pointer;margin-left:4px;opacity:.6;transition:opacity .15s;}
+.listing-edit-btn:hover{opacity:1;}
+
+/* listing modal */
+.listing-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:center;justify-content:center;}
+.listing-modal{background:#fff;border-radius:14px;padding:24px;width:min(340px,90vw);box-shadow:0 16px 48px rgba(0,0,0,.2);}
+.lm-title{font-family:'Noto Serif KR',serif;font-size:15px;font-weight:600;margin-bottom:4px;}
+.lm-sub{font-size:11px;color:var(--gray);margin-bottom:18px;}
+.lm-field{margin-bottom:14px;}
+.lm-label{font-size:11px;color:var(--gray);margin-bottom:5px;display:block;}
+.lm-input{width:100%;border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;font-family:'Noto Sans KR',sans-serif;outline:none;transition:border-color .15s;background:var(--bg);}
+.lm-input:focus{border-color:var(--accent);background:#fff;}
+.lm-input::placeholder{color:#bbb;}
+.lm-btns{display:flex;gap:8px;margin-top:20px;}
+.lm-btn-cancel{flex:1;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:13px;cursor:pointer;background:#fff;color:var(--gray);font-family:'Noto Sans KR',sans-serif;}
+.lm-btn-save{flex:2;padding:10px;border:none;border-radius:8px;font-size:13px;cursor:pointer;background:var(--accent);color:#fff;font-weight:600;font-family:'Noto Sans KR',sans-serif;}
+.lm-btn-clear{padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:12px;cursor:pointer;background:#fff;color:var(--gray);font-family:'Noto Sans KR',sans-serif;}
+
+/* commute — simplified 3-destination */
+.c-commute{border-bottom:1px solid var(--border);padding:14px 14px;}
+.ct-title-main{font-size:12px;font-weight:600;color:var(--charcoal);margin-bottom:2px;}
+.ct-title-sub{font-size:10px;color:var(--gray);font-weight:300;margin-left:6px;}
+.ct-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}
+.ct3-item{background:var(--bg);border-radius:9px;padding:10px 11px;}
+.ct3-dest{font-size:13px;font-weight:700;color:var(--charcoal);margin-bottom:7px;letter-spacing:-.2px;}
+.ct3-rows{display:flex;flex-direction:column;gap:5px;}
+.ct3-row{display:flex;align-items:center;gap:4px;}
+.ct3-label{font-size:10px;color:var(--gray);width:24px;flex-shrink:0;}
+.ct3-bus{font-size:12px;font-weight:700;color:var(--blue);}
+.ct3-car{font-size:12px;font-weight:700;color:var(--green);}
+.ct3-sep{font-size:10px;color:#ccc;}
+
+@media(max-width:480px){
+  .ct-grid3{grid-template-columns:1fr;}
+  .ct3-dest{font-size:12px;}
+  .ct3-bus,.ct3-car{font-size:11px;}
+}
 
 /* infra */
 .c-infra{border-bottom:1px solid var(--border);padding:11px 13px;}
@@ -169,7 +200,7 @@ textarea.cm-input::placeholder{color:#c5c0ba;}
 <body>
 
 <div class="map-wrap">
-  <div class="map-title">🏠 재원 & 희영 신혼집 후보 단지 16곳</div>
+  <div class="map-title">🏠 신혼집 후보 단지 16곳</div>
   <div id="naver-map"></div>
   <div class="map-fallback" id="map-fallback">
     <strong>⚠️ 지도 로드 실패</strong>
@@ -177,8 +208,32 @@ textarea.cm-input::placeholder{color:#c5c0ba;}
   </div>
 </div>
 
+<!-- 매물 호가 입력 모달 -->
+<div class="listing-modal-bg" id="listing-modal" style="display:none" onclick="if(event.target===this)closeListingModal()">
+  <div class="listing-modal">
+    <div class="lm-title" id="lm-title">매물 호가 입력</div>
+    <div class="lm-sub" id="lm-sub"></div>
+    <div class="lm-field">
+      <label class="lm-label">최저가 (예: 13.5억)</label>
+      <input class="lm-input" id="lm-min" placeholder="예) 13.5억" />
+    </div>
+    <div class="lm-field">
+      <label class="lm-label">최고가 (예: 15억)</label>
+      <input class="lm-input" id="lm-max" placeholder="예) 15억" />
+    </div>
+    <div class="lm-field">
+      <label class="lm-label">매물 수</label>
+      <input class="lm-input" id="lm-count" placeholder="예) 12" type="number" min="0" />
+    </div>
+    <div class="lm-btns">
+      <button class="lm-btn-cancel" onclick="closeListingModal()">취소</button>
+      <button class="lm-btn-clear" onclick="clearListing()">초기화</button>
+      <button class="lm-btn-save" onclick="saveListing()">저장</button>
+    </div>
+  </div>
+</div>
+
 <div class="main">
-  <div class="top-bar">
     <h2>후보 단지 비교 <span style="font-size:13px;font-weight:300;color:var(--gray);margin-left:6px;">16개 단지</span></h2>
     <div class="sort-wrap">
       <span>정렬</span>
@@ -190,15 +245,16 @@ textarea.cm-input::placeholder{color:#c5c0ba;}
   <div class="cards" id="cards"></div>
 </div>
 
+<!-- Firebase SDK — 메인 스크립트 직전에 로드 -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script>
-// ═══════════════════════════════════════════════════════
-// 단지 데이터
 // ═══════════════════════════════════════════════════════
 const APTS = [
   {
     id:'A', name:'목동센트럴아이파크위브', gu:'양천구', year:2020, units:3045,
     lat:37.5267, lng:126.8651,
-    img:'https://landthumb-phinf.pstatic.net/20211115_283/land_naver_1636937777133kSORH_JPEG/e3ae96fdcc32c470c9c173424ed48a44.JPG?type=m1024', // ← 네이버 부동산 이미지 URL 붙여넣기
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     horae:[
       {icon:'🚇', name:'대장~홍대선 광역철도', tag:'rail', desc:'2025년 12월 착공, 2031년 개통 목표. 신월동에 역 신설 예정 — 철도 음영지역 해소'},
       {icon:'🏗️', name:'서부트럭터미널 복합개발', tag:'dev', desc:'1조9천억 규모, 2026년 본착공. 주거·업무·쇼핑·물류 복합단지 + 체육센터'},
@@ -208,6 +264,8 @@ const APTS = [
     station:'신정네거리역 (2호선) 도보 14분',
     school:{name:'서울신남초', achievement:'중상', note:'단지 내 위치·초품아'},
     p59:{r:'10.5억', l:'10.3억'}, p84:{r:'13.2억', l:'12.9억'},
+    listing59:{min:'', max:'', count:''},
+    listing84:{min:'', max:'', count:''},
     cm:{
       work:[
         {dest:'여의도',    am:{tr:'30분',ca:'20분'}, pm:{tr:'38분',ca:'27분'}},
@@ -234,16 +292,18 @@ const APTS = [
   {
     id:'B', name:'DMC래미안e편한세상', gu:'서대문구', year:2012, units:3293,
     lat:37.5709, lng:126.9089,
-    img:'https://landthumb-phinf.pstatic.net/20170102_109/apt_realimage_1483348232033sRxGz_JPEG/80d9d46d86dac55aa1b21aed098a99c1.JPG?type=m1024',
+    img:'',
     horae:[
       {icon:'🏗️', name:'수색·DMC 광역중심 복합개발', tag:'dev', desc:'2024년 12월 지구단위계획 고시. 서울 서북권 MICE·업무 거점 육성, 환승·상업 허브로 성장'},
       {icon:'🏘️', name:'가재울뉴타운 잔여구역 정비', tag:'redev', desc:'인근 미개발 구역 지속 개발, 뉴타운 완성도 향상으로 주거환경 개선'},
       {icon:'🚇', name:'GTX-A 수서~동탄 수혜', tag:'rail', desc:'수색역 환승 연계 개선, 광역 접근성 향상 기대'},
     ],
-    kbUrl:'https://kbland.kr/se/c/44510',
+    kbUrl:'https://kbland.kr/se/c/22859',
     station:'가좌역 (경의중앙선) 도보 5분',
     school:{name:'북가좌초', achievement:'중상', note:'도보 10분'},
     p59:{r:'11.0억', l:'10.7억'}, p84:{r:'13.1억', l:'12.8억'},
+    listing59:{min:'', max:'', count:''},
+    listing84:{min:'', max:'', count:''},
     cm:{
       work:[
         {dest:'여의도',    am:{tr:'52분',ca:'28분'}, pm:{tr:'60분',ca:'35분'}},
@@ -270,16 +330,18 @@ const APTS = [
   {
     id:'C', name:'마곡수명산파크3단지', gu:'강서구', year:2009, units:846,
     lat:37.5539, lng:126.8400,
-    img:'https://landthumb-phinf.pstatic.net/20170110_215/apt_realimage_1484016321648JhlMx_JPEG/b1ecd0a61ec642d467b9e9833ac36553.jpg?type=m1024',
+    img:'',
     horae:[
       {icon:'🚇', name:'마곡나루역 마곡지구 2단계 고도화', tag:'dev', desc:'마곡업무지구 2단계 개발 진행 중, LG·코오롱 등 대기업 추가 입주 확대'},
       {icon:'🛣️', name:'신월여의 지하도로 무료화', tag:'infra', desc:'완공 시 여의도까지 15분대 접근, 강서~여의도 생활권 통합 및 상권 활성화'},
       {icon:'✈️', name:'김포공항 국제선 확대', tag:'infra', desc:'도보권 공항철도 이용 가능, 수도권 서남부 글로벌 접근성 강화'},
     ],
-    kbUrl:'https://kbland.kr/se/c/15208',
+    kbUrl:'https://kbland.kr/se/c/15206',
     station:'발산역 (5호선) 도보 12분',
     school:{name:'내발산초', achievement:'중', note:'도보 8분·초품아'},
     p59:{r:'8.5억', l:'8.2억'}, p84:{r:'11.0억', l:'10.7억'},
+    listing59:{min:'', max:'', count:''},
+    listing84:{min:'', max:'', count:''},
     cm:{
       work:[
         {dest:'여의도',    am:{tr:'20분',ca:'12분'}, pm:{tr:'28분',ca:'17분'}},
@@ -306,7 +368,7 @@ const APTS = [
   {
     id:'D', name:'창전삼성래미안', gu:'마포구', year:2002, units:553,
     lat:37.5519, lng:126.9228,
-    img:'https://landthumb-phinf.pstatic.net/20260327_171/1774573933847OKosw_JPEG/photoinfra_20260327101212302748.jpg?type=m1024', // ← 네이버 부동산 이미지 URL 붙여넣기
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     horae:[
       {icon:'🏘️', name:'가재울뉴타운 잔여구역 개발', tag:'redev', desc:'인접 미개발 잔여구역 정비사업 진행 중, 신규 상업·주거시설 공급'},
       {icon:'🏗️', name:'수색·DMC 광역중심 육성', tag:'dev', desc:'서울시 서북권 광역중심으로 지정, 업무·MICE 복합개발 추진'},
@@ -316,6 +378,8 @@ const APTS = [
     station:'홍대입구역 (2호선·공항철도) 도보 10분',
     school:{name:'서울창전초', achievement:'중상', note:'도보 5분'},
     p59:{r:'11.5억', l:'11.0억'}, p84:{r:'13.3억', l:'12.9억'},
+    listing59:{min:'', max:'', count:''},
+    listing84:{min:'', max:'', count:''},
     cm:{
       work:[
         {dest:'여의도',    am:{tr:'48분',ca:'30분'}, pm:{tr:'56분',ca:'38분'}},
@@ -342,16 +406,18 @@ const APTS = [
   {
     id:'E', name:'상도하이츠빌', gu:'동작구', year:2003, units:888,
     lat:37.5014, lng:126.9389,
-    img:'https://landthumb-phinf.pstatic.net/20170224_131/apt_realimage_14879256138694bHIi_JPEG/1e7842a693b405f79b9fe5d52e0451a1.jpg?type=m1024', // ← 네이버 부동산 이미지 URL 붙여넣기
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     horae:[
       {icon:'🚇', name:'마곡나루역 인근 마곡지구 고도화', tag:'dev', desc:'마곡업무지구 2단계 개발 진행 중, LG·코오롱 등 대기업 입주 확대'},
       {icon:'🛣️', name:'신월여의 지하도로 수혜', tag:'infra', desc:'무료화 완공 시 여의도까지 15분대 접근 — 강서~여의도 생활권 통합'},
       {icon:'✈️', name:'김포공항 국제선 확대', tag:'infra', desc:'도보권 공항철도 이용 가능, 글로벌 접근성 강화'},
     ],
-    kbUrl:'https://kbland.kr/se/c/5678',
+    kbUrl:'https://kbland.kr/se/c/12554',
     station:'장승배기역 (7호선) 도보 5분',
     school:{name:'서울상도초', achievement:'중', note:'도보 8분'},
     p59:{r:'9.8억', l:'9.5억'}, p84:{r:'13.5억', l:'13.1억'},
+    listing59:{min:'', max:'', count:''},
+    listing84:{min:'', max:'', count:''},
     cm:{
       work:[
         {dest:'여의도',    am:{tr:'55분',ca:'35분'}, pm:{tr:'63분',ca:'43분'}},
@@ -378,16 +444,18 @@ const APTS = [
   {
     id:'F', name:'신당삼성', gu:'중구', year:1999, units:664,
     lat:37.5649, lng:127.0196,
-    img:'https://landthumb-phinf.pstatic.net/20240604_65/land_naver_1717477864285UHTN0_JPEG/287947202406041411039386990604141104180000000.jpg?type=m1024', // ← 네이버 부동산 이미지 URL 붙여넣기
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     horae:[
       {icon:'🚇', name:'홍대 역세권 개발', tag:'dev', desc:'홍대입구역 복합개발 및 상권 고도화 진행 중, 유동인구 증가 수혜'},
       {icon:'🏘️', name:'망원·합정 모아타운', tag:'redev', desc:'합정동 인근 모아타운 추진, 노후 주거지 정비 및 상권 활성화'},
       {icon:'🏗️', name:'마포구 서강 재개발', tag:'redev', desc:'창전·서강 일대 정비사업 추진, 한강변 주거 환경 개선'},
     ],
-    kbUrl:'https://kbland.kr/se/c/420',
+    kbUrl:'https://kbland.kr/se/c/2540',
     station:'신당역 (2·6호선) 도보 5분',
     school:{name:'서울약수초', achievement:'중상', note:'도보 7분'},
     p59:{r:'10.5억', l:'10.0억'}, p84:{r:'13.8억', l:'13.4억'},
+    listing59:{min:'', max:'', count:''},
+    listing84:{min:'', max:'', count:''},
     cm:{
       work:[
         {dest:'여의도',    am:{tr:'50분',ca:'30분'}, pm:{tr:'58분',ca:'37분'}},
@@ -414,16 +482,18 @@ const APTS = [
   {
     id:'G', name:'동아약수하이츠', gu:'중구', year:1996, units:598,
     lat:37.5577, lng:127.0161,
-    img:'https://landthumb-phinf.pstatic.net/20231113_81/land_naver_16998537689162pT88_JPEG/278045202311131436085342141113143608844000000.jpg?type=m1024', // ← 네이버 부동산 이미지 URL 붙여넣기
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     horae:[
       {icon:'🏘️', name:'노량진뉴타운 8개 구역 재개발', tag:'redev', desc:'2027년 전구역 착공, 2031년 완공 목표. 한강벨트 1만 가구 신규 공급'},
       {icon:'🏗️', name:'장승배기 종합행정타운 완공', tag:'infra', desc:'동작구청·구의회·경찰서 이전, 100여 개 상가 입점으로 역세권 활성화'},
       {icon:'🚇', name:'서부선 경전철 추진', tag:'rail', desc:'새절~서울대입구 노선, 상도동 인근 역 신설 검토 중'},
     ],
-    kbUrl:'https://kbland.kr/se/c/1001',
+    kbUrl:'https://kbland.kr/se/c/2539',
     station:'약수역 (3·6호선) 도보 5분',
     school:{name:'서울약수초', achievement:'중상', note:'도보 10분'},
     p59:{r:'11.0억', l:'10.5억'}, p84:{r:'14.5억', l:'14.0억'},
+    listing59:{min:'', max:'', count:''},
+    listing84:{min:'', max:'', count:''},
     cm:{
       work:[
         {dest:'여의도',    am:{tr:'52분',ca:'32분'}, pm:{tr:'60분',ca:'39분'}},
@@ -450,16 +520,18 @@ const APTS = [
   {
     id:'H', name:'염리동상록', gu:'마포구', year:1999, units:690,
     lat:37.5497, lng:126.9572,
-    img:'https://landthumb-phinf.pstatic.net/20250723_72/17532579232158QAo8_JPEG/photoinfra_20250723170521336443.jpg?type=m1024', // ← 네이버 부동산 이미지 URL 붙여넣기
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     horae:[
       {icon:'🏗️', name:'신당 재개발 구역 다수 추진', tag:'redev', desc:'신당10구역 등 신속통합기획 선정, 노후 주거지 정비 진행'},
       {icon:'🏙️', name:'중구 도심 업무지구 인접', tag:'dev', desc:'을지로·명동 업무상권 도보권, 도심 재생사업 수혜'},
       {icon:'🛣️', name:'한양도성 역사문화지구 조성', tag:'infra', desc:'관광·문화 인프라 확충으로 지역 가치 상승 기대'},
     ],
-    kbUrl:'https://kbland.kr/se/c/1380',
+    kbUrl:'https://kbland.kr/se/c/1370',
     station:'애오개역 (5호선) 도보 5분',
     school:{name:'서울염리초', achievement:'중상', note:'도보 7분'},
     p59:{r:'10.8억', l:'10.5억'}, p84:{r:'13.5억', l:'13.0억'},
+    listing59:{min:'', max:'', count:''},
+    listing84:{min:'', max:'', count:''},
     cm:{
       work:[
         {dest:'여의도',    am:{tr:'42분',ca:'27분'}, pm:{tr:'50분',ca:'33분'}},
@@ -486,7 +558,7 @@ const APTS = [
   {
     id:'I', name:'래미안에스티움', gu:'영등포구', year:2017, units:1722,
     lat:37.5082, lng:126.9198,
-    img:'https://landthumb-phinf.pstatic.net/20230725_198/land_naver_1690268495161as8Df_JPEG/27264620230725160134862740072516013561000000.jpg?type=m1024', // ← 네이버 부동산 이미지 URL 붙여넣기
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     horae:[
       {icon:'🏗️', name:'약수·신당 재개발 구역 추진', tag:'redev', desc:'인근 노후 저층주거지 신속통합기획 추진, 주거환경 개선'},
       {icon:'🏙️', name:'을지로·충무로 도심 재생', tag:'dev', desc:'도심 업무·문화 재생사업으로 역세권 가치 지속 상승'},
@@ -496,6 +568,8 @@ const APTS = [
     station:'신풍역 (7호선) 도보 7분',
     school:{name:'대방초', achievement:'중', note:'도보 10분'},
     p59:{r:'12.0억', l:'11.7억'}, p84:{r:'16.5억', l:'16.0억'},
+    listing59:{min:'', max:'', count:''},
+    listing84:{min:'', max:'', count:''},
     cm:{
       work:[
         {dest:'여의도',    am:{tr:'38분',ca:'22분'}, pm:{tr:'46분',ca:'29분'}},
@@ -522,16 +596,18 @@ const APTS = [
   {
     id:'J', name:'현대리버빌1지구', gu:'마포구', year:2000, units:712,
     lat:37.5499, lng:126.9129,
-    img:'https://landthumb-phinf.pstatic.net/20170110_61/apt_realimage_1484012400950BmKti_JPEG/5c00d77301393472e21c137cde03e451.jpg?type=m1024', // ← 네이버 부동산 이미지 URL 붙여넣기
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     horae:[
       {icon:'🏘️', name:'염리동 재개발 정비구역 지정', tag:'redev', desc:'2025년 8월 10년 정체 끝 도시계획위원회 통과, 역세권 재개발 본격화'},
       {icon:'🏗️', name:'마포 신수·공덕 일대 고도화', tag:'dev', desc:'공덕역 인근 업무·주거 복합개발 지속, 역세권 가치 상승'},
       {icon:'🚇', name:'5호선 역세권 + 공덕 환승 근접', tag:'rail', desc:'공덕역 5·6·경의중앙·공항철도 4개 노선 도보권 접근'},
     ],
-    kbUrl:'https://kbland.kr/se/c/1391',
+    kbUrl:'https://kbland.kr/se/c/1877',
     station:'합정역 (2·6호선) 도보 5분',
     school:{name:'서울합정초', achievement:'중상', note:'도보 8분'},
     p59:{r:'12.5억', l:'12.0억'}, p84:{r:'15.5억', l:'15.0억'},
+    listing59:{min:'', max:'', count:''},
+    listing84:{min:'', max:'', count:''},
     cm:{
       work:[
         {dest:'여의도',    am:{tr:'40분',ca:'25분'}, pm:{tr:'48분',ca:'32분'}},
@@ -558,16 +634,18 @@ const APTS = [
   {
     id:'K', name:'한강극동', gu:'마포구', year:1995, units:549,
     lat:37.5479, lng:126.9098,
-    img:'https://landthumb-phinf.pstatic.net/20230313_287/land_naver_1678668364069rBgjJ_JPEG/b1d23f8e877b237d7ffef0b402e5ea4a.JPG?type=m1024', // ← 네이버 부동산 이미지 URL 붙여넣기
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     horae:[
       {icon:'🏘️', name:'신길뉴타운 추가 구역 개발', tag:'redev', desc:'신길뉴타운 잔여 구역 정비사업 진행, 주거 환경 지속 개선'},
       {icon:'🏗️', name:'보라매 도시재생사업', tag:'dev', desc:'보라매공원 인근 도시재생 활성화 구역, 공공시설 확충'},
       {icon:'🚇', name:'서부선 경전철 신풍역 연계', tag:'rail', desc:'서부선 개통 시 강남~강서 직결, 교통 접근성 획기적 개선 기대'},
     ],
-    kbUrl:'https://kbland.kr/se/c/1392',
+    kbUrl:'https://kbland.kr/se/c/1865',
     station:'합정역 (2·6호선) 도보 8분',
     school:{name:'서울합정초', achievement:'중상', note:'도보 12분'},
     p59:{r:'11.5억', l:'11.0억'}, p84:{r:'14.5억', l:'14.0억'},
+    listing59:{min:'', max:'', count:''},
+    listing84:{min:'', max:'', count:''},
     cm:{
       work:[
         {dest:'여의도',    am:{tr:'42분',ca:'26분'}, pm:{tr:'50분',ca:'33분'}},
@@ -594,16 +672,18 @@ const APTS = [
   {
     id:'L', name:'독립문극동아파트', gu:'서대문구', year:1994, units:804,
     lat:37.5757, lng:126.9641,
-    img:'https://landthumb-phinf.pstatic.net/20170103_48/apt_realimage_1483426507973cE8Ka_JPEG/44df1bc8483ce2eb885c6ec833c703dd.JPG?type=m1024', // ← 네이버 부동산 이미지 URL 붙여넣기
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     horae:[
       {icon:'🏘️', name:'합정·망원 모아타운 사업', tag:'redev', desc:'합정동 10개 블록 통합 모아타운 추진, 주거·상업 환경 고도화'},
       {icon:'🏗️', name:'홍대~합정 상권 확장', tag:'dev', desc:'홍대상권 서측 확장으로 합정 일대 상업 가치 지속 상승'},
       {icon:'🏙️', name:'한강변 고도제한 완화 검토', tag:'dev', desc:'합정동 인근 높이 제한 완화로 신규 개발 가능성 확대'},
     ],
-    kbUrl:'https://kbland.kr/se/c/1401',
+    kbUrl:'https://kbland.kr/se/c/1434',
     station:'독립문역 (3호선) 도보 3분',
     school:{name:'서울금화초', achievement:'중', note:'도보 8분'},
     p59:{r:'9.5억', l:'9.2억'}, p84:{r:'13.0억', l:'12.6억'},
+    listing59:{min:'', max:'', count:''},
+    listing84:{min:'', max:'', count:''},
     cm:{
       work:[
         {dest:'여의도',    am:{tr:'55분',ca:'33분'}, pm:{tr:'63분',ca:'40분'}},
@@ -630,16 +710,18 @@ const APTS = [
   {
     id:'M', name:'독립문삼호아파트', gu:'서대문구', year:1987, units:532,
     lat:37.5769, lng:126.9620,
-    img:'https://landthumb-phinf.pstatic.net/20170103_69/apt_realimage_1483426817454C5szl_JPEG/e0004e03a1d1e6044a8118467053cd67.JPG?type=m1024', // ← 네이버 부동산 이미지 URL 붙여넣기
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     horae:[
       {icon:'🏘️', name:'합정·망원 모아타운 수혜', tag:'redev', desc:'인근 모아타운 사업 진행, 주거환경 개선 및 유동인구 증가'},
       {icon:'🚇', name:'2·6호선 합정역 더블역세권', tag:'rail', desc:'도심·강남 동시 접근, 공항철도 환승 가능'},
       {icon:'🌊', name:'한강변 리버뷰 단지', tag:'infra', desc:'한강조망 가능 단지, 한강변 개발 계획 수혜 기대'},
     ],
-    kbUrl:'https://kbland.kr/se/c/1402',
+    kbUrl:'https://kbland.kr/se/c/1433',
     station:'독립문역 (3호선) 도보 5분',
     school:{name:'서울금화초', achievement:'중', note:'도보 10분'},
     p59:{r:'8.5억', l:'8.2억'}, p84:{r:'12.0억', l:'11.7억'},
+    listing59:{min:'', max:'', count:''},
+    listing84:{min:'', max:'', count:''},
     cm:{
       work:[
         {dest:'여의도',    am:{tr:'57분',ca:'34분'}, pm:{tr:'65분',ca:'41분'}},
@@ -666,16 +748,18 @@ const APTS = [
   {
     id:'N', name:'무악현대아파트', gu:'종로구', year:1999, units:628,
     lat:37.5789, lng:126.9599,
-    img:'https://landthumb-phinf.pstatic.net/20220427_76/land_naver_1651017973453eB46J_JPEG/16a045ef1731d4739d5bbd7d75d0754c.JPG?type=m1024', // ← 네이버 부동산 이미지 URL 붙여넣기
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     horae:[
       {icon:'🏘️', name:'서대문 현저동 재개발 추진', tag:'redev', desc:'독립문 인근 노후 저층주거지 정비사업 추진 논의'},
       {icon:'🏗️', name:'경복궁·독립문 역사관광지구', tag:'dev', desc:'도심 역사문화 인프라 확충, 일대 주거 가치 안정적 유지'},
       {icon:'🚇', name:'3호선 역세권 도보 3분', tag:'rail', desc:'도심 직접 연결, GTX-A 연신내 환승 접근성 양호'},
     ],
-    kbUrl:'https://kbland.kr/se/c/1403',
+    kbUrl:'https://kbland.kr/se/c/2489',
     station:'독립문역 (3호선) 도보 5분',
     school:{name:'서울교동초', achievement:'중상', note:'도보 10분'},
     p59:{r:'9.0억', l:'8.7억'}, p84:{r:'12.8억', l:'12.4억'},
+    listing59:{min:'', max:'', count:''},
+    listing84:{min:'', max:'', count:''},
     cm:{
       work:[
         {dest:'여의도',    am:{tr:'55분',ca:'33분'}, pm:{tr:'63분',ca:'40분'}},
@@ -702,7 +786,7 @@ const APTS = [
   {
     id:'O', name:'DMC파크뷰자이1단지', gu:'서대문구', year:2015, units:2280,
     lat:37.5689, lng:126.9139,
-    img:'https://landthumb-phinf.pstatic.net/20170102_217/apt_realimage_14833485156671Ronb_JPEG/246d228497b45e41beb5efb26b81653d.JPG?type=m1024', // ← 네이버 부동산 이미지 URL 붙여넣기
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     horae:[
       {icon:'🏗️', name:'수색·DMC 광역중심 복합개발', tag:'dev', desc:'2024년 12월 지구단위계획 고시. 서울 서북권 MICE·업무 거점 육성'},
       {icon:'🏘️', name:'가재울뉴타운 잔여구역 정비', tag:'redev', desc:'인근 미개발 구역 지속 개발, 뉴타운 완성도 향상'},
@@ -712,6 +796,8 @@ const APTS = [
     station:'가좌역 (경의중앙선) 도보 10분',
     school:{name:'가재울초', achievement:'중상', note:'단지 내 위치·초품아'},
     p59:{r:'11.5억', l:'11.0억'}, p84:{r:'14.9억', l:'14.4억'},
+    listing59:{min:'', max:'', count:''},
+    listing84:{min:'', max:'', count:''},
     cm:{
       work:[
         {dest:'여의도',    am:{tr:'50분',ca:'30분'}, pm:{tr:'58분',ca:'37분'}},
@@ -738,7 +824,7 @@ const APTS = [
   {
     id:'P', name:'DMC센트럴자이', gu:'은평구', year:2022, units:1464,
     lat:37.5779, lng:126.9079,
-    img:'https://landthumb-phinf.pstatic.net/20240626_138/land_naver_1719374464057WALKI_JPEG/288989202406261301038310350626130103948000000.jpg?type=m1024', // ← 네이버 부동산 이미지 URL 붙여넣기
+    img:'', // ← 네이버 부동산 이미지 URL 붙여넣기
     horae:[
       {icon:'🏗️', name:'수색·DMC역 복합개발 직접 수혜', tag:'dev', desc:'2024년 12월 지구단위계획 고시. 글로벌 서북권 광역중심 육성, 단지 바로 인접'},
       {icon:'🏘️', name:'수색증산뉴타운 완성', tag:'redev', desc:'증산지구 재개발 완료 단지로 뉴타운 내 신축 프리미엄 유지'},
@@ -748,6 +834,8 @@ const APTS = [
     station:'디지털미디어시티역 (6호선·공항철도·경의중앙선) 도보 5분',
     school:{name:'증산초', achievement:'중', note:'도보 8분'},
     p59:{r:'10.5억', l:'10.2억'}, p84:{r:'13.8억', l:'13.3억'},
+    listing59:{min:'', max:'', count:''},
+    listing84:{min:'', max:'', count:''},
     cm:{
       work:[
         {dest:'여의도',    am:{tr:'50분',ca:'30분'}, pm:{tr:'58분',ca:'37분'}},
@@ -942,27 +1030,54 @@ function buildCard(apt, num) {
       <div class="p-block">
         <div class="p-type">59㎡ (25평형)</div>
         <div class="p-row"><span>최근 실거래</span><span>${apt.p59.r}</span></div>
-        <div class="p-row"><span>현재 최저매물</span><span class="p-low">${apt.p59.l}</span></div>
+        <div class="p-row p-row-listing">
+          <span>현재 매물 호가</span>
+          <span class="listing-badges" id="listing59-${apt.id}">
+            ${apt.listing59.min||apt.listing59.max||apt.listing59.count
+              ? `<span class="l-min">${apt.listing59.min||'-'}</span><span class="l-wave">~</span><span class="l-max">${apt.listing59.max||'-'}</span>${apt.listing59.count?`<span class="l-count">${apt.listing59.count}건</span>`:''}<span class="listing-edit-btn" onclick="openListingEdit('${apt.id}','59')">✏️</span>`
+              : `<span class="l-empty" onclick="openListingEdit('${apt.id}','59')">+ 입력</span>`}
+          </span>
+        </div>
       </div>
       <div class="p-block">
         <div class="p-type">84㎡ (34평형)</div>
         <div class="p-row"><span>최근 실거래</span><span>${apt.p84.r}</span></div>
-        <div class="p-row"><span>현재 최저매물</span><span class="p-low">${apt.p84.l}</span></div>
+        <div class="p-row p-row-listing">
+          <span>현재 매물 호가</span>
+          <span class="listing-badges" id="listing84-${apt.id}">
+            ${apt.listing84.min||apt.listing84.max||apt.listing84.count
+              ? `<span class="l-min">${apt.listing84.min||'-'}</span><span class="l-wave">~</span><span class="l-max">${apt.listing84.max||'-'}</span>${apt.listing84.count?`<span class="l-count">${apt.listing84.count}건</span>`:''}<span class="listing-edit-btn" onclick="openListingEdit('${apt.id}','84')">✏️</span>`
+              : `<span class="l-empty" onclick="openListingEdit('${apt.id}','84')">+ 입력</span>`}
+          </span>
+        </div>
       </div>
     </div>
 
     <div class="c-commute">
-      <div class="commute-tabs">
-        <div class="ctab on" onclick="switchTab(this,'work-${apt.id}','${apt.id}')">🏢 직장·업무지구</div>
-        <div class="ctab" onclick="switchTab(this,'hub-${apt.id}','${apt.id}')">🚄 교통 허브</div>
-      </div>
-      <div class="commute-panel on" id="work-${apt.id}">
-        <div class="ct-title">오전 8시 출근 / 오후 6시 퇴근 기준 · 🚌 대중교통  🚗 자동차</div>
-        <div class="ct-grid">${workRows}</div>
-      </div>
-      <div class="commute-panel" id="hub-${apt.id}">
-        <div class="ct-title">오전 8시 출근 / 오후 6시 퇴근 기준 · 🚌 대중교통  🚗 자동차 · 경부고속은 자동차 기준</div>
-        <div class="ct-grid-wide">${hubRows}</div>
+      <div class="ct-title-main">📍 출퇴근 소요시간 <span class="ct-title-sub">오전 8시 출근 / 오후 6시 퇴근</span></div>
+      <div class="ct-grid3">
+        ${[
+          {dest:'여의도', am:apt.cm.work[0].am, pm:apt.cm.work[0].pm},
+          {dest:'강남역',  am:apt.cm.work[2].am, pm:apt.cm.work[2].pm},
+          {dest:'판교',    am:apt.cm.work[5].am, pm:apt.cm.work[5].pm},
+        ].map(r=>`
+        <div class="ct3-item">
+          <div class="ct3-dest">${r.dest}</div>
+          <div class="ct3-rows">
+            <div class="ct3-row">
+              <span class="ct3-label">출근</span>
+              <span class="ct3-bus">🚌 ${r.am.tr}</span>
+              <span class="ct3-sep">·</span>
+              <span class="ct3-car">🚗 ${r.am.ca}</span>
+            </div>
+            <div class="ct3-row">
+              <span class="ct3-label">퇴근</span>
+              <span class="ct3-bus">🚌 ${r.pm.tr}</span>
+              <span class="ct3-sep">·</span>
+              <span class="ct3-car">🚗 ${r.pm.ca}</span>
+            </div>
+          </div>
+        </div>`).join('')}
       </div>
     </div>
 
@@ -1033,15 +1148,6 @@ function buildCard(apt, num) {
   return d;
 }
 
-// tab switch
-function switchTab(el, panelId, aptId) {
-  const card = document.getElementById(`card-${aptId}`);
-  card.querySelectorAll('.ctab').forEach(t=>t.classList.remove('on'));
-  card.querySelectorAll('.commute-panel').forEach(p=>p.classList.remove('on'));
-  el.classList.add('on');
-  document.getElementById(panelId).classList.add('on');
-}
-
 // ═══════════════════════════════════════════════════════
 // 정렬
 // ═══════════════════════════════════════════════════════
@@ -1064,16 +1170,69 @@ function sortCards(type, updBtn=true){
 // ═══════════════════════════════════════════════════════
 // init
 // ═══════════════════════════════════════════════════════
-function init(){
-  const wrap=document.getElementById('cards');
-  APTS.forEach((apt,i)=>{wrap.appendChild(buildCard(apt,i+1));});
-  APTS.forEach(apt=>{
-    initStars(document.getElementById(`s-${apt.id}-jw`),apt.id,'jw');
-    initStars(document.getElementById(`s-${apt.id}-hy`),apt.id,'hy');
-    renderStars(document.getElementById(`s-${apt.id}-av`),0,10);
-  });
+// ═══════════════════════════════════════════════════════
+// 매물 호가 입력 모달
+// ═══════════════════════════════════════════════════════
+let _lmAptId = null;
+let _lmType  = null; // '59' | '84'
+
+function openListingEdit(aptId, type) {
+  _lmAptId = aptId;
+  _lmType  = type;
+  const apt = APTS.find(a => a.id === aptId);
+  const field = type === '59' ? apt.listing59 : apt.listing84;
+  document.getElementById('lm-title').textContent = `${apt.name} — 매물 호가 입력`;
+  document.getElementById('lm-sub').textContent   = `${type === '59' ? '59㎡ (25평형)' : '84㎡ (34평형)'} 현재 매물 호가를 입력하세요`;
+  document.getElementById('lm-min').value   = field.min   || '';
+  document.getElementById('lm-max').value   = field.max   || '';
+  document.getElementById('lm-count').value = field.count || '';
+  document.getElementById('listing-modal').style.display = 'flex';
+  setTimeout(() => document.getElementById('lm-min').focus(), 50);
 }
-init();
+
+function closeListingModal() {
+  document.getElementById('listing-modal').style.display = 'none';
+  _lmAptId = null; _lmType = null;
+}
+
+function saveListing() {
+  if (!_lmAptId) return;
+  const apt = APTS.find(a => a.id === _lmAptId);
+  const field = _lmType === '59' ? apt.listing59 : apt.listing84;
+  field.min   = document.getElementById('lm-min').value.trim();
+  field.max   = document.getElementById('lm-max').value.trim();
+  field.count = document.getElementById('lm-count').value.trim();
+  renderListingBadge(_lmAptId, _lmType);
+  closeListingModal();
+}
+
+function clearListing() {
+  if (!_lmAptId) return;
+  const apt = APTS.find(a => a.id === _lmAptId);
+  const field = _lmType === '59' ? apt.listing59 : apt.listing84;
+  field.min = field.max = field.count = '';
+  renderListingBadge(_lmAptId, _lmType);
+  closeListingModal();
+}
+
+function renderListingBadge(aptId, type) {
+  const apt = APTS.find(a => a.id === aptId);
+  const field = type === '59' ? apt.listing59 : apt.listing84;
+  const el = document.getElementById(`listing${type}-${aptId}`);
+  if (!el) return;
+  const hasData = field.min || field.max || field.count;
+  if (hasData) {
+    el.innerHTML = `<span class="l-min">${field.min||'-'}</span><span class="l-wave">~</span><span class="l-max">${field.max||'-'}</span>${field.count?`<span class="l-count">${field.count}건</span>`:''}<span class="listing-edit-btn" onclick="openListingEdit('${aptId}','${type}')">✏️</span>`;
+  } else {
+    el.innerHTML = `<span class="l-empty" onclick="openListingEdit('${aptId}','${type}')">+ 입력</span>`;
+  }
+}
+
+// Enter 키로 저장
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeListingModal();
+  if (e.key === 'Enter' && _lmAptId) saveListing();
+});
 
 // ═══════════════════════════════════════════════════════
 // 네이버 지도 — SDK &callback=initMap 으로 자동 호출됨
@@ -1101,5 +1260,164 @@ function initMap(){
 }
 </script>
 <script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=YOUR_CLIENT_ID&language=ko&callback=initMap"></script>
+<script>
+// ═══════════════════════════════════════════════════════
+// Firebase 초기화 & 실시간 동기화
+// ═══════════════════════════════════════════════════════
+const firebaseConfig = {
+  apiKey: "AIzaSyB0Xfe8SlkcHvtvinudBhlx_ZRbYrM7_M0",
+  authDomain: "real-estate-ba289.firebaseapp.com",
+  databaseURL: "https://real-estate-ba289-default-rtdb.firebaseio.com",
+  projectId: "real-estate-ba289",
+  storageBucket: "real-estate-ba289.firebasestorage.app",
+  messagingSenderId: "1019189139463",
+  appId: "1:1019189139463:web:6b1d981581c7439cce72a2"
+};
+
+if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+const db = firebase.database();
+const ROOT = 'home'; // DB 최상위 키
+
+// ── 저장 헬퍼 ──────────────────────────────────────────
+function dbSet(path, value) {
+  db.ref(`${ROOT}/${path}`).set(value);
+}
+
+// ── 별점 저장 (Firebase 연동) ──────────────────────────
+// 기존 initStars의 click 핸들러에서 호출하도록 refreshRating 확장
+const _origRefreshRating = refreshRating;
+refreshRating = function(id) {
+  _origRefreshRating(id);
+  // Firebase에 저장
+  dbSet(`ratings/${id}`, ratings[id]);
+};
+
+// ── 한줄평 저장 ────────────────────────────────────────
+function saveComment(aptId, who, value) {
+  dbSet(`comments/${aptId}/${who}`, value);
+}
+
+// ── 매물 호가 저장 (Firebase 연동) ────────────────────
+const _origSaveListing = saveListing;
+saveListing = function() {
+  if (!_lmAptId) return;
+  const apt = APTS.find(a => a.id === _lmAptId);
+  const field = _lmType === '59' ? apt.listing59 : apt.listing84;
+  field.min   = document.getElementById('lm-min').value.trim();
+  field.max   = document.getElementById('lm-max').value.trim();
+  field.count = document.getElementById('lm-count').value.trim();
+  renderListingBadge(_lmAptId, _lmType);
+  // Firebase에 저장
+  dbSet(`listings/${_lmAptId}/listing${_lmType}`, {
+    min: field.min, max: field.max, count: field.count
+  });
+  closeListingModal();
+};
+
+const _origClearListing = clearListing;
+clearListing = function() {
+  if (!_lmAptId) return;
+  const apt = APTS.find(a => a.id === _lmAptId);
+  const field = _lmType === '59' ? apt.listing59 : apt.listing84;
+  field.min = field.max = field.count = '';
+  renderListingBadge(_lmAptId, _lmType);
+  dbSet(`listings/${_lmAptId}/listing${_lmType}`, {min:'', max:'', count:''});
+  closeListingModal();
+};
+
+// ── 저장 표시 토스트 ──────────────────────────────────
+function showToast(msg) {
+  let t = document.getElementById('fb-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'fb-toast';
+    t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(26,26,26,.88);color:#fff;padding:8px 18px;border-radius:100px;font-size:12px;z-index:999;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(8px);';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.style.opacity = '0', 2000);
+}
+
+function init(){
+  const wrap=document.getElementById('cards');
+  APTS.forEach((apt,i)=>{wrap.appendChild(buildCard(apt,i+1));});
+  APTS.forEach(apt=>{
+    initStars(document.getElementById(`s-${apt.id}-jw`),apt.id,'jw');
+    initStars(document.getElementById(`s-${apt.id}-hy`),apt.id,'hy');
+    renderStars(document.getElementById(`s-${apt.id}-av`),0,10);
+  });
+
+  // ── 한줄평 자동저장 이벤트 연결 ──────────────────────
+  APTS.forEach(apt => {
+    const card = document.getElementById(`card-${apt.id}`);
+    if (!card) return;
+    const textareas = card.querySelectorAll('textarea.cm-input');
+    const whos = ['jw', 'hy'];
+    textareas.forEach((ta, i) => {
+      const who = whos[i];
+      let timer;
+      ta.addEventListener('input', () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          saveComment(apt.id, who, ta.value);
+          showToast('💾 저장됨');
+        }, 800); // 0.8초 후 자동 저장
+      });
+    });
+  });
+
+  // ── Firebase에서 데이터 불러오기 (실시간) ────────────
+  db.ref(ROOT).on('value', snapshot => {
+    const data = snapshot.val() || {};
+
+    // 별점 복원
+    if (data.ratings) {
+      Object.entries(data.ratings).forEach(([id, val]) => {
+        if (!ratings[id]) return;
+        ratings[id].jw = val.jw || 0;
+        ratings[id].hy = val.hy || 0;
+        // UI 갱신
+        const jwEl = document.getElementById(`s-${id}-jw`);
+        const hyEl = document.getElementById(`s-${id}-hy`);
+        if (jwEl) renderStars(jwEl, ratings[id].jw, 10);
+        if (hyEl) renderStars(hyEl, ratings[id].hy, 10);
+        _origRefreshRating(id); // 평균 갱신
+      });
+      updateRanks();
+      if (curSort === 'rating') sortCards('rating', false);
+    }
+
+    // 매물 호가 복원
+    if (data.listings) {
+      Object.entries(data.listings).forEach(([id, val]) => {
+        const apt = APTS.find(a => a.id === id);
+        if (!apt) return;
+        if (val.listing59) {
+          apt.listing59 = val.listing59;
+          renderListingBadge(id, '59');
+        }
+        if (val.listing84) {
+          apt.listing84 = val.listing84;
+          renderListingBadge(id, '84');
+        }
+      });
+    }
+
+    // 한줄평 복원
+    if (data.comments) {
+      Object.entries(data.comments).forEach(([id, val]) => {
+        const card = document.getElementById(`card-${id}`);
+        if (!card) return;
+        const textareas = card.querySelectorAll('textarea.cm-input');
+        if (val.jw !== undefined && textareas[0]) textareas[0].value = val.jw;
+        if (val.hy !== undefined && textareas[1]) textareas[1].value = val.hy;
+      });
+    }
+  });
+}
+init();
+</script>
 </body>
 </html>
