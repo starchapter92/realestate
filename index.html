@@ -1606,12 +1606,9 @@ function init(){
     textareas.forEach((ta, i) => {
       const who = whos[i];
       let timer;
-      ta.addEventListener('input', () => {
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-          saveComment(apt.id, who, ta.value);
-          showToast('💾 저장됨');
-        }, 800); // 0.8초 후 자동 저장
+      ta.addEventListener('blur', () => {
+        saveComment(apt.id, who, ta.value);
+        showToast('💾 저장됨');
       });
     });
   });
